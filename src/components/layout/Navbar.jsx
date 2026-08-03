@@ -36,7 +36,9 @@ const Navbar = () => {
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white/90 backdrop-blur-md shadow-card py-2" : "bg-transparent py-4"
+        scrolled 
+          ? "bg-white shadow-card py-2" 
+          : "bg-white lg:bg-transparent py-4" // White on mobile, transparent on desktop
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -53,10 +55,10 @@ const Navbar = () => {
               className={({ isActive }) =>
                 `relative px-4 py-2 text-sm font-semibold rounded-full transition-colors duration-200 ${
                   isActive
-                    ? scrolled
+                    ? scrolled || window.innerWidth < 1024
                       ? "text-navy-900"
                       : "text-white"
-                    : scrolled
+                    : scrolled || window.innerWidth < 1024
                     ? "text-navy-500 hover:text-navy-900"
                     : "text-navy-100 hover:text-white"
                 }`
@@ -95,7 +97,7 @@ const Navbar = () => {
           onClick={() => setOpen(true)}
           aria-label="Open menu"
           className={`lg:hidden flex items-center justify-center h-11 w-11 rounded-full transition-colors ${
-            scrolled ? "text-navy-900 bg-navy-50" : "text-white bg-white/10"
+            scrolled ? "text-navy-900 bg-navy-50" : "text-navy-900 bg-navy-50" // Always dark on mobile
           }`}
         >
           <HiBars3 className="text-2xl" />

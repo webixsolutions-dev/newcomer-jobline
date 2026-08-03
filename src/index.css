@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply font-body text-navy-900 bg-white antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-heading;
+}
+
+::selection {
+  @apply bg-gold-300 text-navy-900;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #eef2f7;
+}
+::-webkit-scrollbar-thumb {
+  background: #7f9abd;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4f739f;
+}
+
+@layer components {
+  .container-app {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-500 via-gold-400 to-gold-600;
+  }
+
+  .link-underline {
+    @apply relative after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-gold-500 after:transition-all after:duration-300 hover:after:w-full;
+  }
+}
+
+/* ==========================================================================
+   DASHBOARD THEME TOKENS — Newcomer Jobline
+   Every dashboard component (src/dashboard) reads colors from these CSS
+   variables, never hardcoded hex values. To re-skin the dashboard, only
+   this block needs to change — it mirrors src/dashboard/theme/theme.js.
+   Built from the same palette as tailwind.config.js (navy, gold, teal)
+   so the dashboard and marketing site feel like one product.
+   ========================================================================== */
+:root {
+  /* Brand */
+  --color-primary: #0B2545;        /* navy-900 — header, headings */
+  --color-primary-light: #1b3253;  /* navy-700 */
+  --color-accent: #F5A623;         /* gold-500 — primary CTAs, active nav */
+  --color-accent-hover: #dc8113;   /* gold-600 */
+  --color-secondary: #1F7A6C;      /* teal-700 — secondary actions, stats */
+  --color-secondary-light: #eafaf5;/* teal-50 */
+  --color-success: #0B2545;        /* navy-900 — sidebar background */
+
+  /* Surfaces */
+  --color-bg: #eef2f7;             /* navy-50 */
+  --color-surface: #ffffff;
+  --color-border: #d5dfeb;         /* navy-100 */
+
+  /* Text */
+  --color-text: #0B2545;           /* navy-900 */
+  --color-text-muted: #4f739f;     /* navy-400 */
+  --color-text-inverted: #ffffff;
+
+  /* Status badges (fixed palette) */
+  --status-active-bg: #E7EFE1;
+  --status-active-text: #3F6B2A;
+  --status-pending-bg: #FBEEDA;
+  --status-pending-text: #A66A1E;
+  --status-closed-bg: #eef2f7;
+  --status-closed-text: #4f739f;
+  --status-rejected-bg: #F7E4E0;
+  --status-rejected-text: #A13A2A;
+
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --shadow-card: 0 4px 20px rgba(11, 37, 69, 0.08);
+}
+
+.dashboard-shell ::-webkit-scrollbar { width: 8px; height: 8px; }
+.dashboard-shell ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 8px; }

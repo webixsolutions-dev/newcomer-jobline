@@ -1,0 +1,96 @@
+/** @typedef {import('./types').Application} Application */
+
+/** Applications submitted BY the logged-in job seeker. */
+export const mockMyApplications = [
+  {
+    id: "app_201",
+    job_id: "job_101",
+    job_title: "Front Desk Receptionist",
+    company_name: "Northbridge Offices Inc.",
+    applicant_id: "usr_001",
+    applied_via_site_id: 2,
+    resume_path: "amara_osei_resume.pdf",
+    cover_letter: "I'd love to bring my front-desk experience to your team.",
+    status: "shortlisted",
+    created_at: "2026-07-05T09:00:00.000Z",
+  },
+  {
+    id: "app_202",
+    job_id: "job_104",
+    job_title: "Executive Assistant to VP Operations",
+    company_name: "Northbridge Offices Inc.",
+    applicant_id: "usr_001",
+    applied_via_site_id: 2,
+    resume_path: "amara_osei_resume.pdf",
+    cover_letter: null,
+    status: "rejected",
+    created_at: "2026-06-10T09:00:00.000Z",
+  },
+  {
+    id: "app_203",
+    job_id: "job_103",
+    job_title: "Office Manager",
+    company_name: "Northbridge Offices Inc.",
+    applicant_id: "usr_001",
+    applied_via_site_id: 2,
+    resume_path: "amara_osei_resume.pdf",
+    cover_letter: null,
+    status: "submitted",
+    created_at: "2026-05-15T09:00:00.000Z",
+  },
+];
+
+/** Applicants for jobs owned BY the logged-in recruiter's company. */
+export const mockApplicants = [
+  {
+    id: "app_301",
+    job_id: "job_101",
+    job_title: "Front Desk Receptionist",
+    company_name: "Northbridge Offices Inc.",
+    applicant_id: "usr_010",
+    applied_via_site_id: 2,
+    resume_path: "priya_shah_resume.pdf",
+    cover_letter: "Excited to apply my 3 years of front-desk experience.",
+    status: "interviewing",
+    created_at: "2026-07-06T09:00:00.000Z",
+    applicant_name: "Priya Shah",
+    applicant_headline: "Front Desk Coordinator | 3 yrs experience",
+  },
+  {
+    id: "app_302",
+    job_id: "job_101",
+    job_title: "Front Desk Receptionist",
+    company_name: "Northbridge Offices Inc.",
+    applicant_id: "usr_011",
+    applied_via_site_id: 2,
+    resume_path: "marcus_lee_resume.pdf",
+    cover_letter: null,
+    status: "submitted",
+    created_at: "2026-07-09T09:00:00.000Z",
+    applicant_name: "Marcus Lee",
+    applicant_headline: "Recent grad, Business Administration",
+  },
+  {
+    id: "app_303",
+    job_id: "job_103",
+    job_title: "Office Manager",
+    company_name: "Northbridge Offices Inc.",
+    applicant_id: "usr_012",
+    applied_via_site_id: 2,
+    resume_path: "jenna_wu_resume.pdf",
+    cover_letter: null,
+    status: "hired",
+    created_at: "2026-04-10T09:00:00.000Z",
+    applicant_name: "Jenna Wu",
+    applicant_headline: "Office Manager | 6 yrs experience",
+  },
+];
+
+export const applicationPipeline = [
+  "submitted",
+  "viewed",
+  "shortlisted",
+  "interviewing",
+  "offered",
+  "hired",
+];

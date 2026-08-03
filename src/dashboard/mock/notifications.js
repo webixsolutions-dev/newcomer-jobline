@@ -1,0 +1,73 @@
+/** @typedef {import('./types').Notification} Notification */
+
+export const mockSeekerNotifications = [
+  {
+    id: 1,
+    user_id: "usr_001",
+    type: "application.status_changed",
+    site_id: 2,
+    entity_type: "application",
+    entity_id: "app_201",
+    payload: { message: "Your application for Front Desk Receptionist was shortlisted." },
+    read_at: null,
+    created_at: "2026-07-15T14:00:00.000Z",
+  },
+  {
+    id: 2,
+    user_id: "usr_001",
+    type: "application.status_changed",
+    site_id: 2,
+    entity_type: "application",
+    entity_id: "app_202",
+    payload: { message: "Your application for Executive Assistant to VP Operations was not selected." },
+    read_at: null,
+    created_at: "2026-06-12T10:30:00.000Z",
+  },
+  {
+    id: 3,
+    user_id: "usr_001",
+    type: "job.saved_expiring",
+    site_id: 2,
+    entity_type: "job",
+    entity_id: "job_103",
+    payload: { message: "A job you saved, Office Manager, has expired." },
+    read_at: "2026-06-03T08:00:00.000Z",
+    created_at: "2026-06-02T09:15:00.000Z",
+  },
+];
+
+export const mockRecruiterNotifications = [
+  {
+    id: 11,
+    user_id: "usr_002",
+    type: "job.new_applicant",
+    site_id: 2,
+    entity_type: "job",
+    entity_id: "job_101",
+    payload: { message: "Marcus Lee applied to Front Desk Receptionist." },
+    read_at: null,
+    created_at: "2026-07-09T11:00:00.000Z",
+  },
+  {
+    id: 12,
+    user_id: "usr_002",
+    type: "company.verified",
+    site_id: 2,
+    entity_type: "company",
+    entity_id: "cmp_001",
+    payload: { message: "Northbridge Offices Inc. was verified. Your jobs are now live." },
+    read_at: null,
+    created_at: "2026-07-02T09:00:00.000Z",
+  },
+  {
+    id: 13,
+    user_id: "usr_002",
+    type: "job.expiring_soon",
+    site_id: 2,
+    entity_type: "job",
+    entity_id: "job_101",
+    payload: { message: "Front Desk Receptionist expires in 3 days." },
+    read_at: "2026-07-01T09:00:00.000Z",
+    created_at: "2026-06-30T09:00:00.000Z",
+  },
+];

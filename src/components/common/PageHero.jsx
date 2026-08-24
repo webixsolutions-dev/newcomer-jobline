@@ -21,7 +21,7 @@ const PageHero = ({ eyebrow, title, highlight, subtitle, crumb, children }) => {
   }
 
   return (
-    <section className="relative overflow-hidden pt-32 pb-20 sm:pt-36 sm:pb-24 min-h-[400px] flex items-center">
+    <section className="relative overflow-hidden pt-[var(--hero-top-offset)] pb-[var(--space-section-y)] min-h-[400px] flex items-center">
       {/* Background Image with Overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"

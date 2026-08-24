@@ -1,26 +1,45 @@
-import Hero from "../components/home/Hero"
-import StatsSection from "../components/home/StatsSection"
-import CategoryGrid from "../components/home/CategoryGrid"
-import HowItWorks from "../components/home/HowItWorks"
-import FeaturedJobs from "../components/home/FeaturedJobs"
-import Testimonials from "../components/home/Testimonials"
-import CTASection from "../components/home/CTASection"
-import FAQSection from "../components/common/FAQSection"
-import { faqs } from "../data/content"
+// src/pages/Home.jsx
+import HeroSection from "../components/home/HeroSection";
+import PopularCategories from "../components/home/PopularCategories";
+import HowItWorksSection from "../components/home/HowItWorksSection";
+import TrustedStatsStrip from "../components/home/TrustedStatsStrip";
+import CareerResources from "../components/home/CareerResources";
+import ForEmployersSection from "../components/home/ForEmployersSection";
+import SuccessStories from "../components/home/SuccessStories";
+import CareerJourneyCTA from "../components/home/CareerJourneyCTA";
+import FAQSection from "../components/home/FAQSection";
 
 const Home = () => {
   return (
     <>
-      <Hero />
-      <StatsSection />
-      <CategoryGrid />
-      <HowItWorks />
-      <FeaturedJobs />
-      <Testimonials />
-      <FAQSection items={faqs} />
-      <CTASection />
-    </>
-  )
-}
+      {/* 4.2 Hero + Search + Feature Highlights */}
+      <HeroSection />
 
-export default Home
+      {/* 4.3 Popular Job Categories */}
+      <PopularCategories />
+
+      {/* 4.4 How It Works */}
+      <HowItWorksSection />
+
+      {/* 4.5 Trusted Stats Strip */}
+      <TrustedStatsStrip />
+
+      {/* 4.6 Career Resources for Newcomers */}
+      <CareerResources />
+
+      {/* 4.7 For Employers */}
+      <ForEmployersSection />
+
+      {/* 4.8 Success Stories */}
+      <SuccessStories />
+
+      {/* 4.9 Start Your Career Journey CTA */}
+      <CareerJourneyCTA />
+
+      {/* 4.10 FAQ Section */}
+      <FAQSection />
+    </>
+  );
+};
+
+export default Home;

@@ -1,66 +1,67 @@
-import { useEffect, useState } from "react"
-import { AnimatePresence, motion } from "framer-motion"
-import { NavLink, Link } from "react-router-dom"
-import { HiBars3, HiXMark } from "react-icons/hi2"
-import Button from "../common/Button"
-import logo from "../../assets/logo.png"
-import { useAuth } from "../../dashboard/auth/AuthContext"
+// src/components/layout/Navbar.jsx
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { NavLink, Link, useLocation } from "react-router-dom";
+import { HiBars3, HiXMark } from "react-icons/hi2";
+import { HiBriefcase, HiUser } from "react-icons/hi";
+import { useAuth } from "../../dashboard/auth/AuthContext";
 
 const LINKS = [
   { label: "Home", to: "/" },
-  { label: "Browse Jobs", to: "/browse-jobs" },
-  { label: "Post a Job", to: "/post-job" },
+  { label: "Browse Jobs", to: "/jobs" },
   { label: "Employers", to: "/employers" },
+  { label: "Resources", to: "/resources" },
   { label: "About Us", to: "/about" },
   { label: "Contact Us", to: "/contact" },
-]
+];
 
 const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false)
-  const [open, setOpen] = useState(false)
-  const { isAuthenticated, role } = useAuth()
-  const dashboardPath = role === "recruiter" ? "/dashboard/recruiter" : "/dashboard/seeker"
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const { isAuthenticated, role, logout } = useAuth();
+  const { pathname } = useLocation();
+  const isPostJobActive = pathname === "/post-job";
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12)
-    onScroll()
-    window.addEventListener("scroll", onScroll)
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : ""
-    return () => (document.body.style.overflow = "")
-  }, [open])
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => (document.body.style.overflow = "");
+  }, [open]);
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? "bg-white shadow-card py-2" 
-          : "bg-white lg:bg-transparent py-4" // White on mobile, transparent on desktop
+      className={`fixed top-0 inset-x-0 z-50 bg-white transition-all duration-300 ${
+        scrolled ? "shadow-card" : "border-b border-navy-100"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <img src={logo} alt="Newcomer Jobline" className="h-10 sm:h-12 w-auto" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-[72px]">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2.5 shrink-0">
+          <img
+            src="/logo.png"
+            alt="Newcomer Jobline"
+            className="h-10 sm:h-11 w-auto"
+          />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-1">
+        {/* Desktop nav links */}
+        <nav className="hidden lg:flex items-center gap-0">
           {LINKS.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
               end={link.to === "/"}
               className={({ isActive }) =>
-                `relative px-4 py-2 text-sm font-semibold rounded-full transition-colors duration-200 ${
+                `relative px-4 py-2 text-sm font-semibold transition-colors duration-200 ${
                   isActive
-                    ? scrolled || window.innerWidth < 1024
-                      ? "text-navy-900"
-                      : "text-white"
-                    : scrolled || window.innerWidth < 1024
-                    ? "text-navy-500 hover:text-navy-900"
-                    : "text-navy-100 hover:text-white"
+                    ? "text-navy-900"
+                    : "text-navy-500 hover:text-navy-900"
                 }`
               }
             >
@@ -70,7 +71,7 @@ const Navbar = () => {
                   {isActive && (
                     <motion.span
                       layoutId="nav-underline"
-                      className="absolute left-4 right-4 -bottom-0.5 h-[3px] rounded-full bg-gold-500"
+                      className="absolute left-4 right-4 -bottom-[1px] h-[3px] rounded-full bg-gold-500"
                     />
                   )}
                 </>
@@ -79,31 +80,56 @@ const Navbar = () => {
           ))}
         </nav>
 
+        {/* Desktop CTA buttons */}
         <div className="hidden lg:flex items-center gap-3">
-          <Button
-            as={Link}
-            to={isAuthenticated ? dashboardPath : "/login"}
-            variant={scrolled ? "ghost" : "outlineLight"}
-            size="sm"
-          >
-            {isAuthenticated ? "My Dashboard" : "Sign In"}
-          </Button>
-          <Button as={Link} to="/post-job" variant="primary" size="sm">
-            Post a Job
-          </Button>
+          {/* Post a Job — active-state driven by useLocation, same underline pattern as NavLinks */}
+          <div className="relative">
+            <Link
+              to="/post-job"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold rounded-full text-sm transition-all duration-200 shadow-soft"
+            >
+              <HiBriefcase className="text-base" />
+              Post a Job
+            </Link>
+            {isPostJobActive && (
+              <motion.span
+                layoutId="nav-underline"
+                className="absolute left-0 right-0 -bottom-[1px] h-[3px] rounded-full bg-gold-500"
+              />
+            )}
+          </div>
+
+          {/* Sign In / Sign Out */}
+          {isAuthenticated ? (
+            <button
+              onClick={logout}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-navy-50 text-navy-900 font-bold rounded-full text-sm border-2 border-navy-900 transition-all duration-200"
+            >
+              <HiUser className="text-base" />
+              Sign Out
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-navy-50 text-navy-900 font-bold rounded-full text-sm border-2 border-navy-900 transition-all duration-200"
+            >
+              <HiUser className="text-base" />
+              Sign In
+            </Link>
+          )}
         </div>
 
+        {/* Mobile hamburger */}
         <button
           onClick={() => setOpen(true)}
           aria-label="Open menu"
-          className={`lg:hidden flex items-center justify-center h-11 w-11 rounded-full transition-colors ${
-            scrolled ? "text-navy-900 bg-navy-50" : "text-navy-900 bg-navy-50" // Always dark on mobile
-          }`}
+          className="lg:hidden flex items-center justify-center h-10 w-10 rounded-full bg-navy-50 text-navy-700"
         >
           <HiBars3 className="text-2xl" />
         </button>
       </div>
 
+      {/* Mobile drawer */}
       <AnimatePresence>
         {open && (
           <>
@@ -122,7 +148,7 @@ const Navbar = () => {
               className="fixed top-0 right-0 z-50 h-full w-[82%] max-w-sm bg-white shadow-2xl lg:hidden flex flex-col"
             >
               <div className="flex items-center justify-between p-5 border-b border-navy-100">
-                <img src={logo} alt="Newcomer Jobline" className="h-9 w-auto" />
+                <img src="/logo.png" alt="Newcomer Jobline" className="h-9 w-auto" />
                 <button
                   onClick={() => setOpen(false)}
                   aria-label="Close menu"
@@ -145,7 +171,9 @@ const Navbar = () => {
                       onClick={() => setOpen(false)}
                       className={({ isActive }) =>
                         `block px-4 py-3 rounded-xl text-base font-semibold transition-colors ${
-                          isActive ? "bg-navy-900 text-white" : "text-navy-700 hover:bg-navy-50"
+                          isActive
+                            ? "bg-navy-900 text-white"
+                            : "text-navy-700 hover:bg-navy-50"
                         }`
                       }
                     >
@@ -155,25 +183,46 @@ const Navbar = () => {
                 ))}
               </nav>
               <div className="mt-auto p-5 border-t border-navy-100 flex flex-col gap-3">
-                <Button
-                  as={Link}
-                  to={isAuthenticated ? dashboardPath : "/login"}
-                  variant="outline"
-                  fullWidth
+                {isAuthenticated ? (
+                  <button
+                    onClick={() => {
+                      logout();
+                      setOpen(false);
+                    }}
+                    className="flex w-full items-center justify-center gap-2 px-4 py-3 bg-white text-navy-900 font-bold rounded-xl border-2 border-navy-900 text-sm"
+                  >
+                    <HiUser className="text-base" />
+                    Sign Out
+                  </button>
+                ) : (
+                  <Link
+                    to="/login"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-white text-navy-900 font-bold rounded-xl border-2 border-navy-900 text-sm"
+                  >
+                    <HiUser className="text-base" />
+                    Sign In
+                  </Link>
+                )}
+                <Link
+                  to="/post-job"
                   onClick={() => setOpen(false)}
+                  className={`flex items-center justify-center gap-2 px-4 py-3 font-bold rounded-xl text-sm transition-colors ${
+                    isPostJobActive
+                      ? "bg-navy-900 text-white"
+                      : "bg-gold-500 hover:bg-gold-400 text-navy-900"
+                  }`}
                 >
-                  {isAuthenticated ? "My Dashboard" : "Sign In"}
-                </Button>
-                <Button as={Link} to="/post-job" variant="primary" fullWidth onClick={() => setOpen(false)}>
+                  <HiBriefcase className="text-base" />
                   Post a Job
-                </Button>
+                </Link>
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
     </header>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

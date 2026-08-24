@@ -1,76 +1,239 @@
-import { motion } from "framer-motion"
-import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2"
-import { categories, jobTypes, experienceLevels } from "../../data/jobs"
+// src/components/jobs/FilterSidebar.jsx
+import { useState, useEffect } from "react";
+import {
+  HiOutlineMapPin,
+  HiOutlineMagnifyingGlass,
+  HiOutlineBookmark,
+  HiChevronUp,
+  HiChevronDown,
+} from "react-icons/hi2";
+import { FaLayerGroup } from "react-icons/fa6";
+import { HiOutlineBriefcase, HiOutlineCurrencyDollar, HiOutlineHome } from "react-icons/hi2";
+
+const JOB_CATEGORIES = [
+  "All categories",
+  "Office & Administration",
+  "Customer Service",
+  "Technology & IT",
+  "Skilled Trades",
+  "Healthcare Support",
+  "Hospitality",
+];
+
+const EMP_TYPES = ["Full-Time", "Part-Time", "Contract", "Temporary", "Internship"];
+const WORK_STYLES = ["Remote", "Hybrid", "On-site"];
+
+const FilterGroup = ({ title, icon: Icon, children }) => {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <div className="py-5 border-b border-navy-100">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center justify-between w-full text-left"
+      >
+        <div className="flex items-center gap-3">
+          <Icon className="text-navy-400 text-lg" />
+          <span className="font-bold text-navy-900 text-sm">{title}</span>
+        </div>
+        {isOpen ? (
+          <HiChevronUp className="text-navy-400 text-lg" />
+        ) : (
+          <HiChevronDown className="text-navy-400 text-lg" />
+        )}
+      </button>
+      {isOpen && <div className="mt-4 flex flex-col gap-3">{children}</div>}
+    </div>
+  );
+};
 
 /**
- * Reusable filter sidebar for Browse Jobs page.
+ * Left sidebar for refining search results.
  */
-const FilterGroup = ({ title, options, selected, onChange }) => (
-  <div className="flex flex-col gap-3">
-    <h4 className="text-sm font-bold text-navy-900">{title}</h4>
-    <div className="flex flex-col gap-2">
-      {options.map((option) => (
-        <label
-          key={option}
-          className="flex items-center gap-2.5 cursor-pointer text-sm text-navy-500 hover:text-navy-900 transition-colors"
-        >
-          <input
-            type="radio"
-            name={title}
-            checked={selected === option}
-            onChange={() => onChange(option)}
-            className="h-4 w-4 accent-gold-500"
-          />
-          {option}
-        </label>
-      ))}
-    </div>
-  </div>
-)
+const FilterSidebar = ({ filters, updateFilters, clearFilters }) => {
+  const [localFilters, setLocalFilters] = useState(filters);
 
-const FilterSidebar = ({ filters, setFilters }) => {
+  // Keep local state somewhat in sync if hero search updates filters
+  useEffect(() => {
+    setLocalFilters((prev) => ({ ...prev, ...filters }));
+  }, [filters]);
+
+  const handleCheckboxChange = (field, value) => {
+    setLocalFilters((prev) => {
+      const current = prev[field] || [];
+      if (current.includes(value)) {
+        return { ...prev, [field]: current.filter((v) => v !== value) };
+      } else {
+        return { ...prev, [field]: [...current, value] };
+      }
+    });
+  };
+
+  const handleUpdate = () => {
+    updateFilters(localFilters);
+  };
+
+  const handleSaveSearch = (e) => {
+    e.preventDefault();
+    console.log("Saving search parameters:", localFilters);
+    alert("Search saved! You will receive notifications for new jobs matching these criteria.");
+  };
+
+  const isAllTypes =
+    !localFilters.employmentTypesList || localFilters.employmentTypesList.length === 0;
+
   return (
-    <motion.aside
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      className="flex flex-col gap-8 rounded-2xl border border-navy-100 bg-white p-6 shadow-card h-fit lg:sticky lg:top-28"
-    >
-      <div className="flex items-center gap-2 border-b border-navy-100 pb-4">
-        <HiOutlineAdjustmentsHorizontal className="text-xl text-gold-500" />
-        <h3 className="text-base font-bold text-navy-900">Filter Jobs</h3>
+    <div className="bg-white lg:bg-transparent lg:pr-6">
+      <div className="flex items-center justify-between mb-4 lg:mb-6">
+        <h3 className="font-bold text-navy-900 font-heading text-lg">
+          Refine Your Search
+        </h3>
+        <button
+          onClick={() => {
+            clearFilters();
+            setLocalFilters({
+              keyword: "",
+              location: "",
+              category: "All categories",
+              employmentType: "All types",
+              employmentTypesList: [],
+              salaryMin: "",
+              salaryMax: "",
+              workStyles: [],
+            });
+          }}
+          className="text-teal-700 text-sm font-bold hover:underline"
+        >
+          Clear all
+        </button>
       </div>
 
-      <FilterGroup
-        title="Category"
-        options={categories}
-        selected={filters.category}
-        onChange={(v) => setFilters((f) => ({ ...f, category: v }))}
-      />
-      <FilterGroup
-        title="Job Type"
-        options={jobTypes}
-        selected={filters.type}
-        onChange={(v) => setFilters((f) => ({ ...f, type: v }))}
-      />
-      <FilterGroup
-        title="Experience"
-        options={experienceLevels}
-        selected={filters.experience}
-        onChange={(v) => setFilters((f) => ({ ...f, experience: v }))}
-      />
+      <div className="bg-white rounded-2xl lg:border-none border border-navy-100 lg:p-0 p-5">
+        {/* Location */}
+        <FilterGroup title="Location" icon={HiOutlineMapPin}>
+          <div className="relative mb-2">
+            <HiOutlineMapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-navy-400 text-lg" />
+            <input
+              type="text"
+              placeholder="City, province, or remote"
+              value={localFilters.location || ""}
+              onChange={(e) => setLocalFilters({ ...localFilters, location: e.target.value })}
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-navy-200 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none text-sm"
+            />
+          </div>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" className="w-4 h-4 rounded border-navy-300 text-teal-700 focus:ring-teal-500" />
+            <span className="text-sm text-navy-700">Remote (anywhere in Canada)</span>
+          </label>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" className="w-4 h-4 rounded border-navy-300 text-teal-700 focus:ring-teal-500" />
+            <span className="text-sm text-navy-700">Major cities only</span>
+          </label>
+        </FilterGroup>
 
-      <button
-        onClick={() =>
-          setFilters({ category: categories[0], type: jobTypes[0], experience: experienceLevels[0] })
-        }
-        className="text-sm font-semibold text-teal-700 hover:text-teal-800 transition-colors text-left"
-      >
-        Reset all filters
-      </button>
-    </motion.aside>
-  )
-}
+        {/* Job Category */}
+        <FilterGroup title="Job Category" icon={FaLayerGroup}>
+          <select
+            value={localFilters.category || "All categories"}
+            onChange={(e) => setLocalFilters({ ...localFilters, category: e.target.value })}
+            className="w-full px-4 py-2 rounded-lg border border-navy-200 focus:border-teal-500 outline-none text-sm bg-white"
+          >
+            {JOB_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </FilterGroup>
 
-export default FilterSidebar
+        {/* Employment Type */}
+        <FilterGroup title="Employment Type" icon={HiOutlineBriefcase}>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isAllTypes}
+              onChange={() => setLocalFilters({ ...localFilters, employmentTypesList: [] })}
+              className="w-4 h-4 rounded border-navy-300 text-teal-700 focus:ring-teal-500"
+            />
+            <span className="text-sm text-navy-900 font-medium">All types</span>
+          </label>
+          {EMP_TYPES.map((type) => (
+            <label key={type} className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={localFilters.employmentTypesList?.includes(type) || false}
+                onChange={() => handleCheckboxChange("employmentTypesList", type)}
+                className="w-4 h-4 rounded border-navy-300 text-teal-700 focus:ring-teal-500"
+              />
+              <span className="text-sm text-navy-700">{type}</span>
+            </label>
+          ))}
+        </FilterGroup>
+
+        {/* Salary Range */}
+        <FilterGroup title="Salary Range" icon={HiOutlineCurrencyDollar}>
+          <div className="flex items-center gap-2">
+            <select
+              value={localFilters.salaryMin || ""}
+              onChange={(e) => setLocalFilters({ ...localFilters, salaryMin: e.target.value })}
+              className="w-1/2 px-2 py-2 rounded-lg border border-navy-200 focus:border-teal-500 outline-none text-sm bg-white"
+            >
+              <option value="">Min salary</option>
+              <option value="30000">$30k</option>
+              <option value="50000">$50k</option>
+              <option value="70000">$70k</option>
+              <option value="90000">$90k</option>
+            </select>
+            <span className="text-navy-300">-</span>
+            <select
+              value={localFilters.salaryMax || ""}
+              onChange={(e) => setLocalFilters({ ...localFilters, salaryMax: e.target.value })}
+              className="w-1/2 px-2 py-2 rounded-lg border border-navy-200 focus:border-teal-500 outline-none text-sm bg-white"
+            >
+              <option value="">Max salary</option>
+              <option value="40000">$40k</option>
+              <option value="60000">$60k</option>
+              <option value="80000">$80k</option>
+              <option value="120000">$120k+</option>
+            </select>
+          </div>
+        </FilterGroup>
+
+        {/* Work Style */}
+        <FilterGroup title="Work Style" icon={HiOutlineHome}>
+          {WORK_STYLES.map((style) => (
+            <label key={style} className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={localFilters.workStyles?.includes(style) || false}
+                onChange={() => handleCheckboxChange("workStyles", style)}
+                className="w-4 h-4 rounded border-navy-300 text-teal-700 focus:ring-teal-500"
+              />
+              <span className="text-sm text-navy-700">{style}</span>
+            </label>
+          ))}
+        </FilterGroup>
+
+        <div className="mt-6 flex flex-col gap-4">
+          <button
+            onClick={handleUpdate}
+            className="w-full flex items-center justify-center gap-2 bg-navy-900 hover:bg-navy-800 text-white font-bold py-3 rounded-xl transition-colors"
+          >
+            <HiOutlineMagnifyingGlass className="text-lg" />
+            Update Results
+          </button>
+          <a
+            href="#save"
+            onClick={handleSaveSearch}
+            className="w-full flex items-center justify-center gap-2 text-teal-700 font-bold hover:text-teal-800 transition-colors text-sm"
+          >
+            <HiOutlineBookmark className="text-lg" />
+            Save this search
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FilterSidebar;

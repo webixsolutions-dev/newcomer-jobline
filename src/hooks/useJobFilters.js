@@ -1,10 +1,10 @@
 // src/hooks/useJobFilters.js
 import { useState, useMemo } from "react";
-import { mockJobs } from "../data/mockJobs";
 import { useSearchParams } from "react-router-dom";
+import { useServiceCareJobs } from "./useServiceCareJobs";
 
 /**
- * Hook to manage complex search and filtering state over mock job data.
+ * Hook to manage complex search and filtering state over backend dynamic jobs data.
  */
 export const useJobFilters = () => {
   const [searchParams] = useSearchParams();
@@ -24,6 +24,9 @@ export const useJobFilters = () => {
   const [sortBy, setSortBy] = useState("Most Recent");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
+
+  // FETCH JOBS FROM BACKEND DYNAMICALLY
+  const { jobs, loading, error } = useServiceCareJobs({ limit: 100 });
 
   const updateFilters = (newFilters) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
@@ -46,7 +49,7 @@ export const useJobFilters = () => {
 
   // Filter logic
   const filteredJobs = useMemo(() => {
-    return mockJobs.filter((job) => {
+    return jobs.filter((job) => {
       // 1. Keyword search
       if (filters.keyword) {
         const query = filters.keyword.toLowerCase();
@@ -92,18 +95,23 @@ export const useJobFilters = () => {
 
       return true;
     });
-  }, [filters]);
+  }, [jobs, filters]);
 
   // Sorting
   const sortedJobs = useMemo(() => {
     const sorted = [...filteredJobs];
-    // In a real app we'd sort by actual date fields. 
-    // Here we'll just reverse them or leave them since they are mocked nicely.
     if (sortBy === "Most Recent") {
-      // default mock order is roughly recent to old
-      return sorted; 
+      return sorted.sort((a, b) => {
+        const dateA = new Date(a.raw?.published_at || a.raw?.created_at || 0);
+        const dateB = new Date(b.raw?.published_at || b.raw?.created_at || 0);
+        return dateB - dateA;
+      });
     } else if (sortBy === "Oldest") {
-      return sorted.reverse();
+      return sorted.sort((a, b) => {
+        const dateA = new Date(a.raw?.published_at || a.raw?.created_at || 0);
+        const dateB = new Date(b.raw?.published_at || b.raw?.created_at || 0);
+        return dateA - dateB;
+      });
     } else if (sortBy === "Salary (High to Low)") {
       return sorted.sort((a, b) => b.salaryMax - a.salaryMax);
     }
@@ -128,5 +136,7 @@ export const useJobFilters = () => {
     totalPages,
     totalJobs: sortedJobs.length,
     currentJobs,
+    loading,
+    error,
   };
 };

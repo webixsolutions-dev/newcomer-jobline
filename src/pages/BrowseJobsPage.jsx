@@ -30,6 +30,8 @@ const BrowseJobsPage = () => {
     totalPages,
     totalJobs,
     currentJobs,
+    loading,
+    error,
   } = useJobFilters();
 
   const listRef = useRef(null);
@@ -62,12 +64,22 @@ const BrowseJobsPage = () => {
                 sortBy={sortBy}
                 setSortBy={setSortBy}
               />
-              <JobList
-                jobs={currentJobs}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
+              {loading ? (
+                <div className="text-center py-12">
+                  <p className="text-navy-500 font-medium">Loading jobs...</p>
+                </div>
+              ) : error ? (
+                <div className="text-center py-12">
+                  <p className="text-red-500 font-medium">{error}</p>
+                </div>
+              ) : (
+                <JobList
+                  jobs={currentJobs}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              )}
             </div>
 
           </div>

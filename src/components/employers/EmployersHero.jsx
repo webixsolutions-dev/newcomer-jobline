@@ -26,7 +26,7 @@ const EmployersHero = () => {
             initial={{ opacity: 0, x: -32 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-            className="flex flex-col justify-center gap-6 py-16 lg:py-20 col-span-1 lg:col-span-6 hero-left-pad"
+            className="flex flex-col justify-center gap-6 py-16 lg:py-20 col-span-1 lg:col-span-5 pr-4 lg:pr-8"
           >
             <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold leading-[1.1] text-navy-900 font-heading">
               Hire Newcomer Talent Across Canada
@@ -58,7 +58,7 @@ const EmployersHero = () => {
           </motion.div>
 
           {/* Right column spacer on desktop */}
-          <div className="hidden lg:block lg:col-span-6" />
+          <div className="hidden lg:block lg:col-span-7" />
         </div>
       </div>
     </section>

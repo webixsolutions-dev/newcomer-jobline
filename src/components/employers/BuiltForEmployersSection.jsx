@@ -10,7 +10,7 @@ import DecorativeShape from "../common/DecorativeShape";
  */
 const BuiltForEmployersSection = () => {
   return (
-    <section className="relative py-16 sm:py-24 bg-white overflow-hidden">
+    <section className="relative py-16 sm:py-24 bg-white overflow-hidden min-h-[580px] flex items-center">
       {/* Decorative accent shape */}
       <DecorativeShape
         position="bottom-left"
@@ -19,11 +19,38 @@ const BuiltForEmployersSection = () => {
         className="-mb-24 opacity-80"
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      {/* ── Background Image (Desktop only) ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="absolute inset-y-0 right-0 w-full lg:w-[65%] hidden lg:block overflow-hidden py-10"
+        aria-hidden="true"
+      >
+        <div 
+          className="w-full h-full overflow-hidden"
+          style={{
+            borderTopLeftRadius: '50%',
+            borderBottomLeftRadius: '20%',
+            borderTopRightRadius: '1rem',
+            borderBottomRightRadius: '1rem',
+          }}
+        >
+          <img
+            src="/employers/built.webp"
+            alt="Diverse team meeting and collaborating"
+            className="w-full h-full object-cover object-right"
+          />
+        </div>
+      </motion.div>
+
+      {/* ── Foreground Content ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* ── Left: Content & Stacked Cards ── */}
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8 col-span-1 lg:col-span-6 pr-4 lg:pr-12">
             <motion.div
               initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -69,17 +96,19 @@ const BuiltForEmployersSection = () => {
             </div>
           </div>
 
-          {/* ── Right: Image with Organic Mask ── */}
+          {/* Spacer Column on Desktop */}
+          <div className="col-span-1 lg:col-span-6 hidden lg:block" />
+
+          {/* ── Mobile-only Image ── */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8 }}
-            className="relative aspect-[4/3] lg:aspect-auto w-full"
+            className="relative w-full h-[320px] sm:h-[400px] lg:hidden block col-span-1 mt-6"
           >
-            {/* Organic rounded mask matching hero style */}
             <div 
-              className="absolute inset-0 w-full h-full overflow-hidden"
+              className="w-full h-full overflow-hidden"
               style={{
                 borderTopLeftRadius: '50%',
                 borderBottomLeftRadius: '20%',
@@ -88,12 +117,13 @@ const BuiltForEmployersSection = () => {
               }}
             >
               <img
-                src="/employers/build.webp"
+                src="/employers/built.webp"
                 alt="Diverse team meeting and collaborating"
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-cover object-right"
               />
             </div>
           </motion.div>
+
         </div>
       </div>
     </section>

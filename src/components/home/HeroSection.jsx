@@ -119,6 +119,8 @@ const HeroSection = () => {
               alt="Diverse group of professionals in Canada"
               className="absolute inset-0 w-full h-full object-cover object-center"
             />
+            {/* Soft gradient fade overlay to blend the image into the white background on the left */}
+            <div className="absolute inset-y-0 left-0 w-[30%] bg-gradient-to-r from-white via-white/40 to-transparent z-10 pointer-events-none" />
           </motion.div>
         </div>
       </div>

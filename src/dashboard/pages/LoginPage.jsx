@@ -5,7 +5,7 @@ import { useAuth } from "../auth/AuthContext";
 import Logo from "../../components/common/Logo";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, signIn } = useAuth();
   const navigate = useNavigate();
 
   const [role, setRole] = useState("seeker");
@@ -14,11 +14,34 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
+    setErrorMsg(null);
+    setLoading(true);
+
     const nextRole = role === "seeker" ? "job_seeker" : "recruiter";
+
+    if (email && password) {
+      try {
+        await signIn(email, password);
+        setLoading(false);
+        navigate("/", { replace: true });
+        return;
+      } catch (err) {
+        console.warn("Backend auth failed, trying mock role fallback:", err);
+        if (err.message.includes("credentials") || err.message.includes("password") || err.message.includes("user")) {
+          setErrorMsg(err.message);
+          setLoading(false);
+          return;
+        }
+      }
+    }
+
     login(nextRole);
+    setLoading(false);
     navigate("/", { replace: true });
   }
 
@@ -90,6 +113,11 @@ export default function LoginPage() {
 
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-5">
+            {errorMsg && (
+              <div className="p-3.5 bg-red-50 text-red-800 rounded-xl border border-red-100 text-xs font-semibold">
+                {errorMsg}
+              </div>
+            )}
             {/* Email */}
             <div>
               <label className="block text-xs font-semibold text-[#4f739f] mb-1.5">

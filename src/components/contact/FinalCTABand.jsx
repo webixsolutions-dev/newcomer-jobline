@@ -55,14 +55,7 @@ const FinalCTABand = () => {
             </div>
           </div>
 
-          {/* ── Center: Banner Image ── */}
-          <div className="hidden lg:block relative z-10">
-            <img
-              src="/contactus/banner.webp"
-              alt="Let's Build Your Next Opportunity Together"
-              className="w-64 h-auto rounded-lg shadow-lg"
-            />
-          </div>
+
 
           {/* ── Right: Buttons ── */}
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto relative z-10 shrink-0">

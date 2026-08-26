@@ -16,32 +16,52 @@ const EmployersHireCTABand = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6 }}
-          className="relative rounded-2xl overflow-hidden border border-[#D4E8EB] bg-[#EAF2F4] shadow-sm"
+          className="relative rounded-2xl overflow-hidden shadow-md min-h-[180px] flex items-center bg-[#076474]"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1.1fr] xl:grid-cols-[2fr_1.1fr] items-stretch">
-            
-            {/* ── Left Part: Icon + Text + Buttons ── */}
-            <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 p-6 sm:p-10 z-20">
+          {/* ── Background Hero Image (Desktop only) ── */}
+          <div className="absolute inset-0 w-full h-full hidden lg:block">
+            <img
+              src="/employers/ready.webp"
+              alt="Diverse business team collaborating around a table"
+              className="w-full h-full object-cover object-right"
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
+            />
+          </div>
+          
+          {/* Mobile Background: Textured overlay */}
+          <div className="absolute inset-0 w-full h-full lg:hidden block opacity-15">
+            <img
+              src="/employers/ready.webp"
+              alt="Diverse business team collaborating around a table"
+              className="w-full h-full object-cover object-center"
+            />
+          </div>
+
+          {/* ── Content overlay ── */}
+          <div className="w-full relative z-20 p-6 sm:p-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
               
-              {/* Icon + Text Row */}
-              <div className="flex items-center gap-5">
+              {/* Left Part: Icon + Text */}
+              <div className="col-span-1 lg:col-span-8 flex flex-col sm:flex-row items-start sm:items-center gap-5">
                 {/* User icon inside soft blue circle */}
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#D4E8EB] text-teal-800 flex-shrink-0 shadow-sm">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white border border-white/20 flex-shrink-0 shadow-sm">
                   <HiOutlineUsers className="text-2.5xl" />
                 </div>
                 
-                <div className="flex flex-col gap-1.5">
-                  <h2 className="text-xl sm:text-2.5xl font-extrabold text-navy-950 font-heading leading-tight">
+                <div className="flex flex-col gap-1">
+                  <h2 className="text-xl sm:text-2.5xl font-extrabold text-white font-heading leading-tight">
                     Ready to Hire Newcomer Talent?
                   </h2>
-                  <p className="text-navy-600 text-xs sm:text-sm max-w-md leading-relaxed">
+                  <p className="text-teal-100 text-xs sm:text-sm max-w-xl leading-relaxed">
                     Post your job today and connect with thousands of skilled newcomers across Canada.
                   </p>
                 </div>
               </div>
 
               {/* Buttons Row */}
-              <div className="flex flex-wrap gap-3 shrink-0">
+              <div className="col-span-1 lg:col-span-4 flex flex-wrap gap-3 lg:justify-end shrink-0">
                 <Link
                   to="/post-job"
                   className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#F17B0D] hover:bg-[#D96B07] text-white font-bold rounded-xl transition-all duration-200 shadow-sm text-xs sm:text-sm"
@@ -51,26 +71,13 @@ const EmployersHireCTABand = () => {
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent text-navy-900 border border-navy-500 hover:bg-[#D4E8EB]/50 font-bold rounded-xl transition-all duration-200 text-xs sm:text-sm"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 text-white border border-white/30 hover:bg-white/20 font-bold rounded-xl transition-all duration-200 text-xs sm:text-sm"
                 >
                   Contact Sales
                 </Link>
               </div>
 
             </div>
-
-            {/* ── Right Part: Image with Faded Left Edge ── */}
-            <div className="relative h-48 sm:h-56 lg:h-[180px] xl:h-auto min-h-[160px] w-full overflow-hidden">
-              {/* Left-edge gradient fade blending image with background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#EAF2F4] via-[#EAF2F4]/10 to-transparent z-10 hidden xl:block w-32" />
-              
-              <img
-                src="/employers/ready.webp"
-                alt="Diverse business team collaborating around a table"
-                className="absolute inset-0 w-full h-full object-cover object-center"
-              />
-            </div>
-
           </div>
         </motion.div>
       </div>
@@ -79,3 +86,4 @@ const EmployersHireCTABand = () => {
 };
 
 export default EmployersHireCTABand;
+

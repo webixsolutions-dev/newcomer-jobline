@@ -1,64 +1,54 @@
+import { lazy, Suspense } from "react"
 import { Routes, Route, Navigate } from "react-router-dom"
 import MainLayout from "../layouts/MainLayout"
 import Home from "../pages/Home"
-import BrowseJobsPage from "../pages/BrowseJobsPage"
-import JobDetailPage from "../pages/JobDetailPage"
-import PostJob from "../pages/PostJob"
-import Employers from "../pages/Employers"
-import AboutUs from "../pages/AboutUs"
-import ContactUs from "../pages/ContactUs"
-import ApplyNow from "../pages/ApplyNow"
-import Resources from "../pages/Resources"
 
-// Dashboard: auth + role gating
-import LoginPage from "../dashboard/pages/LoginPage"
-import ProtectedRoute from "../dashboard/auth/ProtectedRoute"
-import { SeekerDashboardShell, RecruiterDashboardShell } from "../dashboard/routes/DashboardShells"
+// Lazy load secondary marketing pages
+const BrowseJobsPage = lazy(() => import("../pages/BrowseJobsPage"))
+const JobDetailPage = lazy(() => import("../pages/JobDetailPage"))
+const PostJob = lazy(() => import("../pages/PostJob"))
+const Employers = lazy(() => import("../pages/Employers"))
+const AboutUs = lazy(() => import("../pages/AboutUs"))
+const ContactUs = lazy(() => import("../pages/ContactUs"))
+const ApplyNow = lazy(() => import("../pages/ApplyNow"))
+const Resources = lazy(() => import("../pages/Resources"))
 
-// Dashboard: job seeker
-import SeekerDashboardHome from "../dashboard/components/seeker/DashboardHome"
-import MyApplications from "../dashboard/components/seeker/MyApplications"
-import SavedJobs from "../dashboard/components/seeker/SavedJobs"
-import SeekerProfileSettings from "../dashboard/components/seeker/ProfileSettings"
+// Auth Page
+const LoginPage = lazy(() => import("../dashboard/pages/LoginPage"))
 
-// Dashboard: recruiter
-import RecruiterDashboardHome from "../dashboard/components/recruiter/DashboardHome"
-import MyJobs from "../dashboard/components/recruiter/MyJobs"
-import PostEditJob from "../dashboard/components/recruiter/PostEditJob"
-import Applicants from "../dashboard/components/recruiter/Applicants"
-import CompanyProfile from "../dashboard/components/recruiter/CompanyProfile"
-
-// Dashboard: shared
-import NotificationsList from "../dashboard/components/shared/NotificationsList"
-import { mockSeekerNotifications, mockRecruiterNotifications } from "../dashboard/mock/notifications"
+// Loading Fallback spinner
+const RouteLoader = () => (
+  <div className="min-h-[60vh] flex items-center justify-center bg-navy-50/20">
+    <div className="w-10 h-10 border-4 border-navy-200 border-t-teal-600 rounded-full animate-spin" />
+  </div>
+);
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      {/* Marketing site */}
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<Home />} />
-        <Route path="jobs" element={<BrowseJobsPage />} />
-        <Route path="jobs/:jobId" element={<JobDetailPage />} />
-        <Route path="post-job" element={<PostJob />} />
-        <Route path="employers" element={<Employers />} />
-        <Route path="about" element={<AboutUs />} />
-        <Route path="contact" element={<ContactUs />} />
-        <Route path="Apply-now" element={<ApplyNow />} />
-        <Route path="resources" element={<Resources />} />
-      </Route>
+    <Suspense fallback={<RouteLoader />}>
+      <Routes>
+        {/* Marketing site */}
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="jobs" element={<BrowseJobsPage />} />
+          <Route path="jobs/:jobId" element={<JobDetailPage />} />
+          <Route path="post-job" element={<PostJob />} />
+          <Route path="employers" element={<Employers />} />
+          <Route path="about" element={<AboutUs />} />
+          <Route path="contact" element={<ContactUs />} />
+          <Route path="Apply-now" element={<ApplyNow />} />
+          <Route path="resources" element={<Resources />} />
+        </Route>
 
-      {/* Dashboard sign-in (mock — picks a role, no backend yet) */}
-      <Route path="/login" element={<LoginPage />} />
+        {/* Dashboard sign-in */}
+        <Route path="/login" element={<LoginPage />} />
 
-      {/* Job seeker dashboard (removed per request, redirect to home) */}
-      <Route path="/dashboard/seeker/*" element={<Navigate to="/" replace />} />
-
-      {/* Recruiter dashboard (removed per request, redirect to home) */}
-      <Route path="/dashboard/recruiter/*" element={<Navigate to="/" replace />} />
-
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* Redirects */}
+        <Route path="/dashboard/seeker/*" element={<Navigate to="/" replace />} />
+        <Route path="/dashboard/recruiter/*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Suspense>
   )
 }
 

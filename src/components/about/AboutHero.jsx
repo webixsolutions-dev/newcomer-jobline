@@ -31,20 +31,28 @@ const AboutHero = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative bg-white overflow-hidden pt-20 pb-16 w-full">
-        <div className="w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[520px] items-stretch gap-12">
+      <section className="relative bg-white overflow-hidden pt-20 pb-16 w-full min-h-[520px] flex items-center">
+        {/* ── Background Hero Image (Desktop only) ── */}
+        <div className="absolute inset-0 w-full h-full hidden lg:block">
+          <img
+            src="/aboutus/hero.webp"
+            alt="4 professionals at laptop with Canadian flag in background"
+            className="w-full h-full object-cover object-right"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+        </div>
+
+        {/* ── Foreground Content ── */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            
             {/* Left: Text Content */}
             <motion.div
               initial={{ opacity: 0, x: -32 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7 }}
-              className="flex flex-col justify-center gap-6 py-16 lg:py-20 hero-left-pad"
+              className="flex flex-col justify-center gap-6 py-16 lg:py-20 col-span-1 lg:col-span-5 pr-4 lg:pr-8"
             >
-              <span className="text-teal-700 font-bold uppercase tracking-wider text-xs sm:text-sm relative pb-1.5 w-fit">
-                ABOUT US
-                <span className="absolute bottom-0 left-0 w-8 h-[2px] bg-teal-700"></span>
-              </span>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.1] text-navy-900 font-heading">
                 About <span className="text-teal-700">Newcomer Jobline</span>
               </h1>
@@ -54,20 +62,9 @@ const AboutHero = () => {
               <div className="flex flex-wrap gap-4 mt-4">{buttons}</div>
             </motion.div>
 
-            {/* Right: Hero Image */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="hidden lg:block w-full aspect-[16/9] relative"
-            >
-              <img
-                src="/aboutus/hero.webp"
-                alt="4 professionals at laptop with Canadian flag in background"
-                className="absolute inset-0 w-full h-full object-cover object-left"
-                onError={(e) => { e.target.style.display = 'none'; }}
-              />
-            </motion.div>
+            {/* Right column spacer on desktop */}
+            <div className="hidden lg:block lg:col-span-7" />
+
           </div>
         </div>
       </section>
@@ -109,3 +106,4 @@ const AboutHero = () => {
 };
 
 export default AboutHero;
+

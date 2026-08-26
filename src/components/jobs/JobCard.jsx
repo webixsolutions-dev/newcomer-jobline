@@ -2,12 +2,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { HiOutlineMapPin, HiOutlineBriefcase, HiOutlineBookmark, HiBookmark } from "react-icons/hi2";
+import { useSavedJobs } from "../../lib/SavedJobsContext";
 
 /**
  * Single job listing card.
  */
 const JobCard = ({ job }) => {
-  const [saved, setSaved] = useState(false);
+  const { isSaved, toggleSaved } = useSavedJobs();
+  const saved = isSaved(job.id);
 
   // Derive a basic fallback color/initials if logo fails
   const fallbackInitial = job.company.charAt(0).toUpperCase();
@@ -77,7 +79,7 @@ const JobCard = ({ job }) => {
         <div className="flex items-center gap-3 w-full justify-between sm:w-auto sm:justify-end">
           <span className="text-xs font-bold text-navy-400">{job.postedAt}</span>
           <button
-            onClick={() => setSaved(!saved)}
+            onClick={() => toggleSaved(job.id)}
             className="p-1.5 text-navy-400 hover:text-teal-700 transition-colors"
             aria-label="Save job"
           >

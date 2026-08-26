@@ -39,21 +39,29 @@ const AboutSplitSection = ({
         viewport={{ once: true }}
         transition={{ duration: 0.7, delay: 0.1 }}
         className={`
-          absolute inset-y-0 ${isReverse ? "left-0" : "right-0"} w-full lg:w-[55%]
+          absolute inset-y-0 ${isReverse ? "left-0" : "right-0"} w-full lg:w-[70%]
           overflow-hidden
         `}
         aria-hidden="true"
       >
         <div className="absolute inset-0 bg-[#E2E8F0] flex items-center justify-center">
           {image ? (
-            <img
-              src={image}
-              alt={altText}
-              className="w-full h-full object-cover object-center"
-              onError={(e) => {
-                e.target.style.display = "none";
-              }}
-            />
+            <>
+              <img
+                src={image}
+                alt={altText}
+                className={`w-full h-full object-cover ${isReverse ? "object-left" : "object-right"}`}
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }}
+              />
+              {/* Soft gradient fade overlay to blend the image into the background */}
+              {!isReverse ? (
+                <div className="absolute inset-y-0 left-0 w-[30%] bg-gradient-to-r from-[#EAF1F7] via-[#EAF1F7]/70 to-transparent z-10 pointer-events-none" />
+              ) : (
+                <div className="absolute inset-y-0 right-0 w-[30%] bg-gradient-to-l from-[#F5F8FA] via-[#F5F8FA]/70 to-transparent z-10 pointer-events-none" />
+              )}
+            </>
           ) : (
             // Visible placeholder while the real asset is missing
             <div className="text-center text-[#94A3B8] text-sm font-medium px-4">

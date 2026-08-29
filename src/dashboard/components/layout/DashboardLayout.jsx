@@ -3,12 +3,31 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 
-export default function DashboardLayout({ role, userName, unreadCount, onLogout, banner, outletContext }) {
+export default function DashboardLayout({
+  role,
+  userName,
+  unreadCount = 0,
+  onLogout,
+  banner,
+  outletContext,
+  sidebarVariant,
+  roleLabel,
+  companyName,
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen" style={{ background: "var(--color-bg)" }}>
-      <Sidebar role={role} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar
+        role={role}
+        variant={sidebarVariant}
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        userName={userName}
+        roleLabel={roleLabel}
+        companyName={companyName}
+        onLogout={onLogout}
+      />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar

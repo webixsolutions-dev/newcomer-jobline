@@ -1,61 +1,109 @@
-import { motion } from "framer-motion"
-import { Link } from "react-router-dom"
-import { HiChevronRight } from "react-icons/hi2"
-import Container from "../common/Container"
+// src/components/about/AboutHero.jsx
+import { Link } from "react-router-dom";
+import { HiOutlineMagnifyingGlass, HiOutlinePhone } from "react-icons/hi2";
+import { motion } from "framer-motion";
+import { ABOUT_MISSION_CARDS } from "../../data/aboutMissionCards";
 
+/**
+ * About Hero matching the site-wide hero layout (same as Home, Browse Jobs, Employers, Contact).
+ * Includes Mission, Vision, Impact cards row underneath.
+ */
 const AboutHero = () => {
+  const buttons = (
+    <>
+      <Link
+        to="/jobs"
+        className="inline-flex items-center gap-2 px-6 py-3 bg-teal-800 hover:bg-teal-700 text-white font-bold rounded-xl transition-colors text-sm shadow-sm"
+      >
+        <HiOutlineMagnifyingGlass className="text-lg" />
+        Browse Jobs
+      </Link>
+      <Link
+        to="/contact"
+        className="inline-flex items-center gap-2 px-6 py-3 border border-orange-500 hover:bg-orange-50 text-orange-500 font-bold rounded-xl transition-colors text-sm shadow-sm"
+      >
+        <HiOutlinePhone className="text-lg" />
+        Contact Us
+      </Link>
+    </>
+  );
+
   return (
-    <section className="relative overflow-hidden bg-navy-900 pt-32 pb-20 sm:pt-40 sm:pb-28">
-      {/* Decorative dot-grid background, consistent with TeamStats */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.1] [background-image:radial-gradient(circle,white_1px,transparent_1px)] [background-size:22px_22px]" />
-      <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-teal-700/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-gold-500/10 blur-3xl" />
+    <>
+      {/* Hero Section */}
+      <section className="relative bg-white overflow-hidden pt-20 pb-16 w-full min-h-[520px] flex items-center">
+        {/* ── Background Hero Image (Desktop only) ── */}
+        <div className="absolute inset-0 w-full h-full hidden lg:block">
+          <img
+            src="/aboutus/hero.webp"
+            alt="4 professionals at laptop with Canadian flag in background"
+            className="w-full h-full object-cover object-right"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+        </div>
 
-      <Container className="relative flex flex-col items-center gap-6 text-center">
-        {/* Breadcrumb */}
-        <motion.nav
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex items-center gap-1.5 text-sm font-medium text-navy-300"
-        >
-          <Link to="/" className="transition-colors hover:text-white">
-            Home
-          </Link>
-          <HiChevronRight className="h-3.5 w-3.5 text-navy-500" />
-          <span className="text-white">About Us</span>
-        </motion.nav>
+        {/* ── Foreground Content ── */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            
+            {/* Left: Text Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -32 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7 }}
+              className="flex flex-col justify-center gap-6 py-16 lg:py-20 col-span-1 lg:col-span-5 pr-4 lg:pr-8"
+            >
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.1] text-navy-900 font-heading">
+                About <span className="text-teal-700">Newcomer Jobline</span>
+              </h1>
+              <p className="text-navy-500 text-base sm:text-lg leading-relaxed max-w-lg">
+                Newcomer Jobline connects talented newcomers with inclusive employers across Canada. We're here to help you find meaningful opportunities, build stronger careers, and create a brighter future.
+              </p>
+              <div className="flex flex-wrap gap-4 mt-4">{buttons}</div>
+            </motion.div>
 
-        <motion.span
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-gold-400"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-gold-400" /> About Us
-        </motion.span>
+            {/* Right column spacer on desktop */}
+            <div className="hidden lg:block lg:col-span-7" />
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-3xl text-4xl font-extrabold leading-tight text-white sm:text-5xl"
-        >
-          Helping Newcomers Build <span className="text-gold-400">Meaningful Careers</span>
-        </motion.h1>
+          </div>
+        </div>
+      </section>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="max-w-2xl text-base leading-relaxed text-navy-300 sm:text-lg"
-        >
-          We connect skilled newcomers with inclusive employers across Canada, offering the
-          support, resources, and opportunities needed to build a lasting career.
-        </motion.p>
-      </Container>
-    </section>
-  )
-}
+      {/* 3 Cards Row */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {ABOUT_MISSION_CARDS.map((card) => {
+              const Icon = card.icon;
+              return (
+                <div
+                  key={card.title}
+                  className="flex flex-col p-8 bg-white border border-navy-100 rounded-2xl shadow-sm hover:shadow-card transition-shadow duration-300 relative group"
+                >
+                  {/* Icon */}
+                  <div
+                    className={`flex h-12 w-12 items-center justify-center rounded-full text-white mb-6 shrink-0 ${card.colorClass}`}
+                  >
+                    <Icon className="text-2xl" />
+                  </div>
 
-export default AboutHero
+                  {/* Content */}
+                  <h3 className="text-xl font-bold text-navy-900 font-heading mb-3 relative">
+                    {card.title}
+                    <span className="absolute bottom-[-6px] left-0 w-8 h-[2px] bg-orange-400"></span>
+                  </h3>
+                  <p className="text-navy-500 text-sm leading-relaxed mt-4">
+                    {card.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+};
+
+export default AboutHero;
+

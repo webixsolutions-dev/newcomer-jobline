@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import {
   FiHome, FiFileText, FiBookmark, FiUser, FiBell, FiBriefcase,
-  FiUsers, FiSettings, FiX,
+  FiUsers, FiSettings, FiX, FiLogOut, FiPlusCircle, FiLayers,
 } from "react-icons/fi";
 import { theme } from "../../theme/theme";
 
@@ -21,8 +21,37 @@ const recruiterLinks = [
   { to: "/dashboard/recruiter/company", label: "Company Profile", icon: FiSettings },
 ];
 
-export default function Sidebar({ role, open, onClose }) {
-  const links = role === "recruiter" ? recruiterLinks : seekerLinks;
+const employerWorkspaceLinks = [
+  { to: "/employer-dashboard/overview", label: "Overview", icon: FiHome, end: true },
+  { to: "/employer-dashboard/job-postings", label: "Job Postings", icon: FiBriefcase },
+  { to: "/employer-dashboard/post-a-job", label: "Post a Job", icon: FiPlusCircle },
+  { to: "/employer-dashboard/applicants", label: "Applicants", icon: FiUsers },
+  { to: "/employer-dashboard/company-profile", label: "Company Profile", icon: FiLayers },
+];
+
+const employerBottomLinks = [
+  { to: "/employer-dashboard/settings", label: "Settings", icon: FiSettings },
+];
+
+function resolveLinks(variant, role) {
+  if (variant === "employer") return employerWorkspaceLinks;
+  if (role === "recruiter") return recruiterLinks;
+  return seekerLinks;
+}
+
+export default function Sidebar({
+  role,
+  variant,
+  open,
+  onClose,
+  userName,
+  roleLabel,
+  companyName,
+  onLogout,
+}) {
+  const links = resolveLinks(variant, role);
+  const displayName = companyName || userName || "User";
+  const subtitle = roleLabel || (role === "recruiter" ? "Recruiter" : "Job Seeker");
 
   return (
     <>
@@ -49,7 +78,19 @@ export default function Sidebar({ role, open, onClose }) {
           </button>
         </div>
 
+        {(variant === "employer" || userName) && (
+          <div className="mx-3 mb-2 rounded-[var(--radius-md)] bg-white/10 px-3 py-3">
+            <p className="truncate text-sm font-semibold text-white">{displayName}</p>
+            <p className="text-xs text-white/60">{subtitle}</p>
+          </div>
+        )}
+
         <nav className="flex-1 space-y-1 px-3 py-2">
+          {variant === "employer" && (
+            <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-white/40">
+              Workspace
+            </p>
+          )}
           {links.map(({ to, label, icon: Icon, end }) => (
             <NavLink
               key={to}
@@ -68,6 +109,37 @@ export default function Sidebar({ role, open, onClose }) {
             </NavLink>
           ))}
         </nav>
+
+        {variant === "employer" && (
+          <div className="space-y-1 border-t border-white/10 px-3 py-3">
+            {employerBottomLinks.map(({ to, label, icon: Icon }) => (
+              <NavLink
+                key={to}
+                to={to}
+                onClick={onClose}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-[var(--radius-md)] px-3 py-2.5 text-sm font-medium transition ${
+                    isActive ? "text-[var(--color-primary)]" : "text-white/80 hover:bg-white/10 hover:text-white"
+                  }`
+                }
+                style={({ isActive }) => (isActive ? { background: "var(--color-accent)" } : undefined)}
+              >
+                <Icon size={18} />
+                {label}
+              </NavLink>
+            ))}
+            {onLogout && (
+              <button
+                type="button"
+                onClick={() => { onClose(); onLogout(); }}
+                className="flex w-full items-center gap-3 rounded-[var(--radius-md)] px-3 py-2.5 text-sm font-medium text-white/80 transition hover:bg-white/10 hover:text-white"
+              >
+                <FiLogOut size={18} />
+                Sign Out
+              </button>
+            )}
+          </div>
+        )}
 
         <div className="px-5 py-5 text-xs text-white/50">
           One account. All partner sites.

@@ -76,9 +76,22 @@ export default {
       backgroundSize: {
         "grid-16": "16px 16px",
       },
+      spacing: {
+        // Reduced vertical rhythm tokens (~40% less for large steps)
+        8: "1.2rem",   // was 2rem (gap-8)
+        12: "1.5rem",  // was 3rem (gap-12)
+        16: "2.5rem",  // was 4rem (py-16)
+        20: "3rem",    // was 5rem (py-20)
+        24: "3.5rem",  // was 6rem (py-24)
+      },
       container: {
         center: true,
-        padding: "1rem",
+        padding: {
+          DEFAULT: "0.6rem",
+          sm: "0.9rem",
+          lg: "1.2rem",
+          xl: "1.5rem",
+        },
       },
     },
   },

@@ -1,56 +1,75 @@
-import PageHero from "../components/common/PageHero"
-import Container from "../components/common/Container"
-import PostJobForm from "../components/forms/PostJobForm"
-import WhyPostSidebar from "../components/forms/WhyPostSidebar"
-import FAQSection from "../components/common/FAQSection"
-import StatsSection from "../components/home/StatsSection"
+// src/pages/PostJob.jsx
+import { useRef } from "react";
+import PostJobHero from "../components/postJob/PostJobHero";
+import PostJobFeatureGrid from "../components/postJob/PostJobFeatureGrid";
+import JobPostingForm from "../components/postJob/JobPostingForm";
+import EmployerBenefitsSidebar from "../components/postJob/EmployerBenefitsSidebar";
+import HowPostingWorks from "../components/postJob/HowPostingWorks";
+import WhyEmployersChooseUs from "../components/postJob/WhyEmployersChooseUs";
+import EmployerStatsStrip from "../components/postJob/EmployerStatsStrip";
+import EmployerFAQSection from "../components/postJob/EmployerFAQSection";
+import HireCTABand from "../components/postJob/HireCTABand";
 
-const postJobFaqs = [
-  {
-    question: "How much does it cost to post a job?",
-    answer: "Your first job posting is completely free. Additional postings are available through our paid plans.",
-  },
-  {
-    question: "How long does my job stay listed?",
-    answer: "Job listings stay active for 30 days by default, and can be renewed or extended anytime from your dashboard.",
-  },
-  {
-    question: "Can I edit my job posting after publishing?",
-    answer: "Yes, you can edit or update any active job posting at any time from your employer dashboard.",
-  },
-  {
-    question: "How do I get access to newcomer-specific hiring resources?",
-    answer: "Once your account is set up, you'll get access to our inclusive hiring guide, credential recognition tips, and onboarding templates.",
-  },
-]
-
+/**
+ * Module 2: Post a Job page (/post-job)
+ * Composes all postJob sub-sections.
+ * formRef is passed down so Hero and CTA Band can scroll to the form.
+ */
 const PostJob = () => {
+  // Ref attached to the form section for smooth-scroll from hero / CTA buttons
+  const formRef = useRef(null);
+
   return (
     <>
-      <PageHero
-        eyebrow="Post a Job"
-        title="Reach Motivated Newcomer Talent"
-        highlight="Newcomer Talent"
-        subtitle="Post your job in minutes and connect with thousands of skilled newcomers ready to contribute to your team."
-        crumb="Post a Job"
-      />
+      {/* 5.1 Hero */}
+      <PostJobHero formRef={formRef} />
 
-      <StatsSection />
+      {/* 5.2 Feature Grid (4 cards, white background) */}
+      <PostJobFeatureGrid />
 
-      <section className="py-8 sm:py-12 bg-white">
-        <Container className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <PostJobForm />
+      {/* 5.3 Job Posting Form + Benefits Sidebar — two-column layout */}
+      <section
+        ref={formRef}
+        id="post-job-form"
+        className="py-12 sm:py-16 bg-white scroll-mt-20"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section heading above the two-column layout */}
+          <div className="mb-8">
+            <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold tracking-widest uppercase px-4 py-1.5 rounded-full w-fit bg-gold-50 text-gold-600 mb-3">
+              <span className="h-1.5 w-1.5 rounded-full bg-gold-500" />
+              Get Started
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-navy-900 font-heading">
+              Post Your Job Listing
+            </h2>
+            <div className="w-10 h-1 bg-gold-500 rounded-full mt-3" />
           </div>
-          <div className="lg:col-span-1">
-            <WhyPostSidebar />
+
+          {/* Two-column: Form (65%) + Sidebar (35%) */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
+            <JobPostingForm />
+            <EmployerBenefitsSidebar />
           </div>
-        </Container>
+        </div>
       </section>
 
-      <FAQSection items={postJobFaqs} eyebrow="Employer FAQ" title="Questions About Posting" highlight="Posting" />
-    </>
-  )
-}
+      {/* 5.4 How Posting Works (cream tinted band) */}
+      <HowPostingWorks />
 
-export default PostJob
+      {/* 5.4 Why Employers Choose Us (4 icon-text cards) */}
+      <WhyEmployersChooseUs />
+
+      {/* 5.4 Stats Strip (wide white card within cream band) */}
+      <EmployerStatsStrip />
+
+      {/* 5.5 FAQ for Employers (2x2 grid, white background) */}
+      <EmployerFAQSection />
+
+      {/* 5.6 Ready to Hire CTA Band */}
+      <HireCTABand formRef={formRef} />
+    </>
+  );
+};
+
+export default PostJob;

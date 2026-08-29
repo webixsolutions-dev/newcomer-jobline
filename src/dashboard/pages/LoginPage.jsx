@@ -1,88 +1,216 @@
-import { useLocation, useNavigate, Link } from "react-router-dom";
-import { FiUser, FiBriefcase, FiArrowLeft } from "react-icons/fi";
+import { useState } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import { HiOutlineUser, HiOutlineBriefcase, HiOutlineLockClosed, HiOutlineEye, HiOutlineEyeSlash, HiOutlineArrowLeft } from "react-icons/hi2";
 import { useAuth } from "../auth/AuthContext";
 import Logo from "../../components/common/Logo";
 
-const ROLES = [
-  {
-    id: "job_seeker",
-    icon: FiUser,
-    title: "Job Seeker",
-    description: "Track applications, save jobs, and manage your profile.",
-    cta: "Continue as Job Seeker",
-  },
-  {
-    id: "recruiter",
-    icon: FiBriefcase,
-    title: "Recruiter",
-    description: "Post jobs, review applicants, and manage your company.",
-    cta: "Continue as Recruiter",
-  },
-];
-
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, signIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const returnTo = location.state?.from;
 
-  function handleSelect(roleId) {
-    login(roleId);
-    const from = location.state?.from;
-    const defaultPath = roleId === "recruiter" ? "/dashboard/recruiter" : "/dashboard/seeker";
-    const matchesRole = from && from.startsWith(roleId === "recruiter" ? "/dashboard/recruiter" : "/dashboard/seeker");
-    navigate(matchesRole ? from : defaultPath, { replace: true });
+  const [role, setRole] = useState("seeker");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setErrorMsg(null);
+    setLoading(true);
+
+    const nextRole = role === "seeker" ? "job_seeker" : "recruiter";
+
+    function redirectAfterLogin(userRole) {
+      if (returnTo && userRole === "job_seeker" && returnTo.startsWith("/dashboard")) {
+        navigate(returnTo, { replace: true });
+      } else if (userRole === "job_seeker") {
+        navigate("/dashboard/seeker", { replace: true });
+      } else if (userRole === "recruiter") {
+        navigate("/employer-dashboard", { replace: true });
+      } else {
+        navigate("/", { replace: true });
+      }
+    }
+
+    if (username && password) {
+      try {
+        const user = await signIn(username, password);
+        setLoading(false);
+        redirectAfterLogin(user?.role || nextRole);
+        return;
+      } catch (err) {
+        console.warn("Backend auth failed, trying mock role fallback:", err);
+        if (err.message.includes("credentials") || err.message.includes("password") || err.message.includes("user")) {
+          setErrorMsg(err.message);
+          setLoading(false);
+          return;
+        }
+      }
+    }
+
+    login(nextRole);
+    setLoading(false);
+    redirectAfterLogin(nextRole);
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12" style={{ background: "var(--color-bg)" }}>
-      <div className="mb-8">
-        <Logo />
-      </div>
-
-      <div className="w-full max-w-2xl text-center">
-        <h1 className="text-2xl font-bold sm:text-3xl" style={{ color: "var(--color-primary)" }}>
-          Sign in to your dashboard
-        </h1>
-        <p className="mx-auto mt-2 max-w-md text-sm" style={{ color: "var(--color-text-muted)" }}>
-          This is a preview build, so there's no password to remember — just choose how you'd like to continue.
-        </p>
-      </div>
-
-      <div className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-5 sm:grid-cols-2">
-        {ROLES.map(({ id, icon: Icon, title, description, cta }) => (
-          <button
-            key={id}
-            onClick={() => handleSelect(id)}
-            className="flex flex-col items-start gap-3 rounded-[var(--radius-lg)] border bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-md"
-            style={{ borderColor: "var(--color-border)" }}
-          >
-            <div
-              className="flex h-11 w-11 items-center justify-center rounded-full text-lg"
-              style={{ background: "var(--color-secondary-light)", color: "var(--color-secondary)" }}
-            >
-              <Icon />
-            </div>
-            <div>
-              <p className="font-bold" style={{ color: "var(--color-primary)" }}>{title}</p>
-              <p className="mt-1 text-sm" style={{ color: "var(--color-text-muted)" }}>{description}</p>
-            </div>
-            <span
-              className="mt-2 inline-flex items-center gap-2 rounded-[var(--radius-md)] px-4 py-2 text-sm font-semibold"
-              style={{ background: "var(--color-accent)", color: "var(--color-primary)" }}
-            >
-              {cta}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      <Link
-        to="/"
-        className="mt-10 inline-flex items-center gap-1.5 text-sm font-medium"
-        style={{ color: "var(--color-text-muted)" }}
+    <div className="min-h-screen w-full flex items-center justify-center relative bg-[#eef2f7] px-4 py-12 overflow-hidden">
+      {/* Background image with overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/herohome.webp')",
+        }}
+        aria-hidden="true"
       >
-        <FiArrowLeft size={14} /> Back to Newcomer Jobline
-      </Link>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B2545]/80 via-[#0B2545]/60 to-[#0B2545]/80" />
+      </div>
+
+      <div className="w-full max-w-md relative z-10">
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-[0_8px_40px_rgba(11,37,69,0.14)] border border-[#d5dfeb] p-8 sm:p-10">
+          {/* Back link */}
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-sm text-[#4f739f] hover:text-[#0B2545] transition-colors mb-6"
+          >
+            <HiOutlineArrowLeft className="text-base" />
+            Back to home
+          </Link>
+
+          {/* Brand */}
+          <div className="text-center mb-8">
+            <Link to="/" className="inline-block mb-4">
+              <img src="/logo.png" alt="Newcomer Jobline Logo" className="h-10 w-auto" />
+            </Link>
+            <h1 className="text-3xl font-extrabold font-heading text-[#0B2545]">
+              Welcome back
+            </h1>
+            <p className="text-[#4f739f] text-sm mt-2">
+              Log in to manage your applications and saved jobs.
+            </p>
+          </div>
+
+          {/* Role selector */}
+          <div className="grid grid-cols-2 gap-1.5 bg-[#eef2f7] rounded-xl p-1.5 mb-6">
+            <button
+              type="button"
+              onClick={() => setRole("seeker")}
+              className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                role === "seeker"
+                  ? "bg-[#0B2545] text-white shadow-md"
+                  : "text-[#4f739f] hover:text-[#0B2545]"
+              }`}
+            >
+              <HiOutlineUser className="text-base" />
+              Job Seeker
+            </button>
+            <button
+              type="button"
+              onClick={() => setRole("employer")}
+              className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                role === "employer"
+                  ? "bg-[#0B2545] text-white shadow-md"
+                  : "text-[#4f739f] hover:text-[#0B2545]"
+              }`}
+            >
+              <HiOutlineBriefcase className="text-base" />
+              Employer
+            </button>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-5" autoComplete="off">
+            {errorMsg && (
+              <div className="p-3.5 bg-red-50 text-red-800 rounded-xl border border-red-100 text-xs font-semibold">
+                {errorMsg}
+              </div>
+            )}
+            {/* Username */}
+            <div>
+              <label className="block text-xs font-semibold text-[#4f739f] mb-1.5">
+                Username <span className="text-[#F5A623]">*</span>
+              </label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-[#7f9abd]">
+                  <HiOutlineUser className="text-lg" />
+                </span>
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="your.username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="off"
+                  className="w-full bg-white border border-[#d5dfeb] rounded-xl py-3 pl-11 pr-4 text-sm text-[#0B2545] placeholder-[#7f9abd] focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div>
+              <label className="block text-xs font-semibold text-[#4f739f] mb-1.5">
+                Password <span className="text-[#F5A623]">*</span>
+              </label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-[#7f9abd]">
+                  <HiOutlineLockClosed className="text-lg" />
+                </span>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="new-password"
+                  className="w-full bg-white border border-[#d5dfeb] rounded-xl py-3 pl-11 pr-12 text-sm text-[#0B2545] placeholder-[#7f9abd] focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#7f9abd] hover:text-[#0B2545] transition-colors"
+                >
+                  {showPassword ? (
+                    <HiOutlineEyeSlash className="text-lg" />
+                  ) : (
+                    <HiOutlineEye className="text-lg" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Link
+                to="/forgot-password"
+                className="text-xs font-bold text-[#F5A623] hover:text-[#dc8113] transition-colors"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              className="w-full mt-2 bg-[#F5A623] hover:bg-[#dc8113] text-[#0B2545] font-bold py-3 px-6 rounded-xl transition-all duration-200 shadow-sm text-sm sm:text-base flex items-center justify-center gap-2 group"
+            >
+              Log In
+              <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
+            </button>
+          </form>
+
+          {/* Sign up */}
+          <p className="text-center text-sm text-[#4f739f] mt-6">
+            Don't have an account?{" "}
+            <Link to="/signup" className="font-bold text-[#F5A623] hover:text-[#dc8113] transition-colors">
+              Sign up
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

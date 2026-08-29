@@ -16,7 +16,11 @@ export default function ProtectedRoute({ role, children }) {
   }
 
   if (currentRole !== role) {
-    return <Navigate to={currentRole === "recruiter" ? "/dashboard/recruiter" : "/dashboard/seeker"} replace />;
+    const redirect =
+      currentRole === "recruiter"
+        ? "/employer-dashboard/overview"
+        : "/dashboard/seeker";
+    return <Navigate to={redirect} replace />;
   }
 
   return children;

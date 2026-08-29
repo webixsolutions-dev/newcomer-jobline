@@ -126,9 +126,9 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* ── Floating Search Card ── */}
-      <div className="relative z-20 -mt-6 pb-0">
-        <div className="container-app max-w-5xl">
+      {/* ── Search Card ── */}
+      <div className="relative z-20 mt-8 sm:mt-10">
+        <div className="container-app">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -207,7 +207,7 @@ const HeroSection = () => {
       </div>
 
       {/* ── Feature Highlights ── */}
-      <div className="container-app max-w-5xl py-6">
+      <div className="container-app mt-8 sm:mt-10 pb-8 sm:pb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {FEATURES.map((f, i) => (
             <motion.div

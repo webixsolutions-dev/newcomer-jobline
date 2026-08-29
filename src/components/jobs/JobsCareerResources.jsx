@@ -9,7 +9,7 @@ import { JOBS_CAREER_RESOURCES } from "../../data/jobsCareerResources";
 const JobsCareerResources = () => {
   return (
     <section className="py-10 sm:py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2.5fr] gap-12 lg:gap-16 items-start mb-12">
           {/* ── Left: Heading ── */}

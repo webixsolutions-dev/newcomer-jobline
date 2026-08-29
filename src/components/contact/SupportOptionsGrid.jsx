@@ -15,7 +15,7 @@ const SupportOptionsGrid = ({ formRef }) => {
 
   return (
     <section className="py-10 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         {/* Heading */}
         <div className="mb-12">
           <p className="text-teal-700 font-bold tracking-widest uppercase text-xs font-heading mb-2">

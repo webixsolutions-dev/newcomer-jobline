@@ -8,7 +8,7 @@ import { JOBS_CATEGORIES } from "../../data/jobsCategories";
 const JobsCategoriesGrid = () => {
   return (
     <section className="py-10 sm:py-16 bg-navy-50/40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         
         {/* Heading */}
         <div className="mb-12">

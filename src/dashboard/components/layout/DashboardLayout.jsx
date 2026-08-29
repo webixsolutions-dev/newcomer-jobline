@@ -38,7 +38,7 @@ export default function DashboardLayout({
           onLogout={onLogout}
         />
         {banner}
-        <main className="flex-1 p-4 lg:p-8">
+        <main className="flex-1 page-gutters py-4 lg:py-8">
           <div className="mx-auto max-w-6xl">
             <Outlet context={outletContext} />
           </div>

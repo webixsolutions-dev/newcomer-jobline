@@ -22,7 +22,7 @@ const PostJobHero = ({ formRef }) => {
             initial={{ opacity: 0, x: -32 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-            className="py-16 lg:py-20 flex flex-col justify-center gap-6 z-10 hero-left-pad"
+            className="py-16 lg:py-20 flex flex-col justify-center gap-6 z-10 page-gutters"
           >
             {/* Eyebrow */}
             <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold tracking-widest uppercase px-4 py-1.5 rounded-full w-fit bg-gold-50 text-gold-600">

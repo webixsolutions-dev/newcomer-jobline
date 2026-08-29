@@ -68,7 +68,7 @@ const FooterLinkCol = ({ title, links }) => (
 const Footer = () => {
   return (
     <footer className="bg-[#FAF8F5] border-t border-navy-100 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6 relative z-10">
+      <div className="container-app pt-12 pb-6 relative z-10">
         
         {/* Main grid: brand | Quick Links | Job Seekers | Employers | Contact Us */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1.2fr)] gap-8 pb-10 border-b border-navy-200">

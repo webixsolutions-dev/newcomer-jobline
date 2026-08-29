@@ -10,7 +10,7 @@ import { EMPLOYER_HIGHLIGHTS } from "../../data/employerHighlights";
 const EmployerHighlightsRow = () => {
   return (
     <section className="pb-16 sm:pb-24 bg-white relative z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {EMPLOYER_HIGHLIGHTS.map((item, i) => (
             <motion.div

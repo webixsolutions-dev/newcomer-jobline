@@ -40,7 +40,7 @@ const Navbar = () => {
         scrolled ? "shadow-card" : "border-b border-navy-100"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-[72px]">
+      <div className="container-app flex items-center justify-between h-[72px]">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
           <img

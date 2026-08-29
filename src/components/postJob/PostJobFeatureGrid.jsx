@@ -45,7 +45,7 @@ const FEATURES = [
 const PostJobFeatureGrid = () => {
   return (
     <section className="py-12 sm:py-16 bg-white border-t border-navy-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {FEATURES.map((f, i) => (
             <motion.div

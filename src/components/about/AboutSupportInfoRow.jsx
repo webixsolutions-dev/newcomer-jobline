@@ -10,7 +10,7 @@ import { HiOutlineEnvelope, HiOutlinePhone, HiOutlineMapPin } from "react-icons/
 const AboutSupportInfoRow = () => {
   return (
     <section className="py-16 bg-white border-t border-navy-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-6 divide-y lg:divide-y-0 lg:divide-x divide-navy-100">
           
           {/* Loop through first two (Community and Employers) */}

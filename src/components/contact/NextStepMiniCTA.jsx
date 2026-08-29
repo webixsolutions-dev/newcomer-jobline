@@ -10,7 +10,7 @@ import { HiOutlineMagnifyingGlass, HiBriefcase } from "react-icons/hi2";
 const NextStepMiniCTA = () => {
   return (
     <section className="pb-16 sm:pb-24 bg-gold-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

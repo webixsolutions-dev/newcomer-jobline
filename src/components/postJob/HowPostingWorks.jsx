@@ -10,7 +10,7 @@ import { POSTING_STEPS } from "../../data/postingSteps";
 const HowPostingWorks = () => {
   return (
     <section className="py-16 sm:py-20 bg-navy-50/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         {/* Section heading */}
         <div className="text-center mb-12">
           <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold tracking-widest uppercase px-4 py-1.5 rounded-full w-fit bg-gold-50 text-gold-600 mb-4">

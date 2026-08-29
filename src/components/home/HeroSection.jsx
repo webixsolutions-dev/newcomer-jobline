@@ -68,19 +68,21 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative bg-white overflow-hidden pt-20 pb-[var(--space-section-y)] w-full">
+    <section className="relative bg-white overflow-hidden pt-20 pb-10 w-full">
       {/* ── Two-column hero ── */}
       <div className="w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch">
-          {/* Left: text content */}
+          {/* Left: text content — left edge aligned with navbar logo */}
           <motion.div
             initial={{ opacity: 0, x: -32 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-            className="py-16 lg:py-20 flex flex-col justify-center gap-6 z-10 hero-left-pad"
+            className="py-10 lg:py-12 flex flex-col justify-center gap-5 z-10 page-gutters lg:pl-[max(6rem,calc((100vw-80rem)/2+6rem))]"
           >
             <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold leading-[1.1] text-navy-900 font-heading">
-              Helping Newcomers Find Jobs and Build Careers{" "}
+              Helping Newcomers Find
+              <br />
+              Jobs and Build Careers{" "}
               <span className="text-teal-700">in Canada</span>
             </h1>
             <div className="w-10 h-1 bg-gold-500 rounded-full" />
@@ -89,7 +91,7 @@ const HeroSection = () => {
               employers, career support, and opportunities across Canada. Your
               future starts here.
             </p>
-            <div className="flex flex-wrap gap-3 mt-2">
+            <div className="flex flex-wrap gap-3 mt-1">
               <Link
                 to="/jobs"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold rounded-full transition-all duration-200 shadow-soft text-sm sm:text-base"
@@ -119,15 +121,14 @@ const HeroSection = () => {
               alt="Diverse group of professionals in Canada"
               className="absolute inset-0 w-full h-full object-cover object-center"
             />
-            {/* Soft gradient fade overlay to blend the image into the white background on the left */}
             <div className="absolute inset-y-0 left-0 w-[30%] bg-gradient-to-r from-white via-white/40 to-transparent z-10 pointer-events-none" />
           </motion.div>
         </div>
       </div>
 
       {/* ── Floating Search Card ── */}
-      <div className="relative z-20 -mt-2 pb-0">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-20 -mt-6 pb-0">
+        <div className="container-app max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -206,7 +207,7 @@ const HeroSection = () => {
       </div>
 
       {/* ── Feature Highlights ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="container-app max-w-5xl py-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {FEATURES.map((f, i) => (
             <motion.div

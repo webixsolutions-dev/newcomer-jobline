@@ -33,7 +33,7 @@ export const IconTextCard = ({ icon: Icon, title, desc, color, bg }) => (
 const WhyEmployersChooseUs = () => {
   return (
     <section className="py-12 sm:py-16 bg-navy-50/60 border-t border-navy-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         {/* Divider above */}
         <div className="w-full h-px bg-navy-100 mb-12" />
 

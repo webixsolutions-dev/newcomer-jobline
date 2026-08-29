@@ -244,7 +244,7 @@ const ApplyNow = () => {
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-yellow-500 rounded-full blur-3xl"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-300 rounded-full blur-3xl"></div>
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+        <div className="relative container-app text-center text-white">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -298,7 +298,7 @@ const ApplyNow = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 mb-12 relative z-10"
+        className="container-app -mt-8 mb-12 relative z-10"
       >
         <div className="bg-navy-800/90 backdrop-blur-sm rounded-2xl shadow-2xl p-6 grid grid-cols-2 md:grid-cols-4 gap-6 border border-yellow-400/20">
           {stats.map((stat, index) => (
@@ -321,7 +321,7 @@ const ApplyNow = () => {
       </motion.div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <div className="container-app pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Application Form */}
           <motion.div 

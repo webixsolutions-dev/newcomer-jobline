@@ -31,7 +31,7 @@ const HIGHLIGHTS = [
  */
 const JobsFeatureHighlights = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-10 pb-8 sm:pb-10 border-b border-navy-100">
+    <div className="container-app mt-8 sm:mt-10 pb-8 sm:pb-10 border-b border-navy-100">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {HIGHLIGHTS.map((item) => (
           <div key={item.title} className="flex items-start gap-4">

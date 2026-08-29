@@ -33,7 +33,7 @@ const PostJob = () => {
         id="post-job-form"
         className="py-12 sm:py-16 bg-white scroll-mt-20"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container-app">
           {/* Section heading above the two-column layout */}
           <div className="mb-8">
             <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold tracking-widest uppercase px-4 py-1.5 rounded-full w-fit bg-gold-50 text-gold-600 mb-3">

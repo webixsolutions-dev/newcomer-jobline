@@ -7,7 +7,6 @@ export const mockSeekerProfile = {
   email: "amara.osei@example.com",
   full_name: "Amara Osei",
   phone: "+1 (416) 555-0142",
-  headline: "Executive Assistant | 5 yrs office administration",
   location_province: "Ontario",
   location_city: "Toronto",
   skills: ["Scheduling", "Data Entry", "Microsoft Excel", "Customer Service"],
@@ -33,11 +32,11 @@ export const mockRecruiterProfile = {
 /** Profile completeness — used by the seeker dashboard-home nudge. */
 export function profileCompleteness(profile) {
   const fields = [
+    profile.full_name,
     profile.phone,
-    profile.headline,
+    profile.email,
     profile.location_city,
     profile.skills?.length > 0,
-    profile.default_resume_path,
   ];
   const filled = fields.filter(Boolean).length;
   return Math.round((filled / fields.length) * 100);

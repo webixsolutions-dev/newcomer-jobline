@@ -9,7 +9,7 @@ import { HOW_IT_WORKS_STEPS } from "../../data/howItWorksSteps";
 const HowItWorksNumbered = () => {
   return (
     <section className="pb-16 sm:pb-20 bg-navy-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         
         {/* Horizontal rule with centered text */}
         <div className="flex items-center justify-center gap-4 mb-12">

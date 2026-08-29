@@ -7,7 +7,7 @@ export default function Topbar({ role, onMenuClick, unreadCount, userName, onLog
 
   return (
     <header
-      className="sticky top-0 z-20 flex h-16 items-center justify-between border-b bg-white px-4 lg:px-6"
+      className="sticky top-0 z-20 flex h-16 items-center justify-between border-b bg-white page-gutters"
       style={{ borderColor: "var(--color-border)" }}
     >
       <div className="flex items-center gap-3">

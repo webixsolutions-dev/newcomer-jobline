@@ -9,7 +9,7 @@ import { EMPLOYER_FEATURE_HIGHLIGHTS } from "../../data/employerFeatureHighlight
 const EmployersFeatureGrid = () => {
   return (
     <section className="relative mt-8 lg:-mt-12 z-20 pb-12 sm:pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {EMPLOYER_FEATURE_HIGHLIGHTS.map((feature, i) => (
             <motion.div

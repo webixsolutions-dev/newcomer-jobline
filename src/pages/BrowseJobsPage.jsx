@@ -45,7 +45,7 @@ const BrowseJobsPage = () => {
       
       {/* ── Main Results Section ── */}
       <section className="py-8 sm:py-12 bg-navy-50/30 scroll-mt-20" ref={listRef}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container-app">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
             
             {/* Left Sidebar */}

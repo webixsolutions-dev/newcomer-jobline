@@ -9,7 +9,7 @@ import { HiOutlineBriefcase, HiOutlineEnvelope } from "react-icons/hi2";
 const HireTalentMiniCTA = () => {
   return (
     <section className="pb-10 sm:pb-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <div className="bg-teal-50 border border-teal-100 rounded-2xl p-6 sm:p-10 flex flex-col lg:flex-row items-center justify-between gap-8">
           
           {/* Left: Content */}

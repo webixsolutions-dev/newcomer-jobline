@@ -11,7 +11,7 @@ import StatCard from "../common/StatCard";
 const EmployerTrustStatsStrip = () => {
   return (
     <section className="py-8 bg-teal-50/50 border-y border-teal-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-0 divide-y md:divide-y-0 md:divide-x divide-teal-100">
           
           {/* Trust Statement */}

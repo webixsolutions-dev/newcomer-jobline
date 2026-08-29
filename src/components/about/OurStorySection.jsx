@@ -38,7 +38,7 @@ const OurStorySection = () => {
 
       {/* Values & Stats */}
       <section className="pb-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container-app">
           
           {/* Values Heading */}
           <div className="text-center mb-12">

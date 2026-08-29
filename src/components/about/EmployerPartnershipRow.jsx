@@ -11,7 +11,7 @@ import { HiOutlineBriefcase } from "react-icons/hi2";
 const EmployerPartnershipRow = () => {
   return (
     <section className="pb-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
           {/* Left: Employer Card */}

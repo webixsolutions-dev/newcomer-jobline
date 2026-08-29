@@ -81,7 +81,7 @@ const EmployerFAQSection = () => {
 
   return (
     <section className="py-16 sm:py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         {/* Left-aligned heading (per spec: unlike centered Homepage FAQ) */}
         <div className="mb-10">
           <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold tracking-widest uppercase px-4 py-1.5 rounded-full w-fit bg-teal-50 text-teal-700 mb-4">

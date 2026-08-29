@@ -8,7 +8,7 @@ import { IMPACT_STATS } from "../../data/impactStats";
 const ImpactStatsBanner = () => {
   return (
     <section className="pb-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <div className="bg-gold-50 border border-gold-200/50 rounded-2xl p-8 lg:p-10">
           <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_2.5fr] gap-10 items-center">
             

@@ -72,7 +72,7 @@ const AboutSplitSection = ({
       </motion.div>
 
       {/* Text column – constrained to the site container so it keeps normal padding */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 container-app">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}

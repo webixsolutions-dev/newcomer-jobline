@@ -11,7 +11,7 @@ const QuickFilterPills = ({ updateFilters, listRef }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
+    <div className="container-app mt-6 sm:mt-8">
       <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
         {JOB_QUICK_FILTERS.map((pill) => (
           <button

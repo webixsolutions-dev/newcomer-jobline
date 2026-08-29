@@ -6,7 +6,7 @@ import { HiBriefcase } from "react-icons/hi";
 const ForEmployersSection = () => {
   return (
     <section className="py-4 sm:py-6 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

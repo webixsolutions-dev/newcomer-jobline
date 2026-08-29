@@ -9,7 +9,7 @@ import { CONTACT_INFO_CARDS } from "../../data/contactInfoCards";
 const ContactInfoCardsRow = () => {
   return (
     <section className="relative mt-8 lg:-mt-12 z-20 pb-12 sm:pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {CONTACT_INFO_CARDS.map((card, i) => (
             <motion.div

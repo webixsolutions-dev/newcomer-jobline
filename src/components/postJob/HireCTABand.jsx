@@ -17,7 +17,7 @@ const HireCTABand = ({ formRef }) => {
 
   return (
     <section className="py-12 sm:py-16 bg-navy-50/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -77,7 +77,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, x: -32 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-            className="py-10 lg:py-12 flex flex-col justify-center gap-5 z-10 page-gutters lg:pl-[max(6rem,calc((100vw-80rem)/2+6rem))]"
+            className="py-10 lg:py-12 flex flex-col justify-center gap-5 z-10 page-gutters lg:pl-[max(theme(spacing.24),calc((100vw-80rem)/2+theme(spacing.24)))]"
           >
             <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold leading-[1.1] text-navy-900 font-heading">
               Helping Newcomers Find

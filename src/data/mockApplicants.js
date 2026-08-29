@@ -1,0 +1,123 @@
+/** Mock applicants who applied to the employer's job postings. */
+export const mockEmployerApplicants = [
+  {
+    id: "cand_001",
+    jobId: "ep_001",
+    jobTitle: "Front Desk Receptionist",
+    name: "Priya Shah",
+    email: "priya.shah@example.com",
+    phone: "+1 (604) 555-0188",
+    headline: "Front Desk Coordinator | 3 yrs experience",
+    resumeFilename: "priya_shah_resume.pdf",
+    skills: ["Front Desk", "Scheduling", "Customer Service", "Microsoft Office"],
+    experience: [
+      {
+        title: "Front Desk Coordinator",
+        company: "Harbour View Hotel",
+        startDate: "2023-03",
+        endDate: "Present",
+        description: "Managed guest check-in, phone routing, and daily front-desk operations.",
+      },
+    ],
+    education: [
+      {
+        school: "Douglas College",
+        degree: "Diploma, Hospitality Management",
+        year: "2022",
+      },
+    ],
+    stage: "interview",
+    notes: "Strong communication skills. Schedule second-round interview.",
+    appliedDate: "2026-07-06T09:00:00.000Z",
+  },
+  {
+    id: "cand_002",
+    jobId: "ep_001",
+    jobTitle: "Front Desk Receptionist",
+    name: "Marcus Lee",
+    email: "marcus.lee@example.com",
+    phone: "+1 (778) 555-0144",
+    headline: "Recent grad, Business Administration",
+    resumeFilename: "marcus_lee_resume.pdf",
+    skills: ["Customer Service", "Data Entry", "Microsoft Excel"],
+    experience: [
+      {
+        title: "Retail Associate",
+        company: "Pacific Goods Co.",
+        startDate: "2024-06",
+        endDate: "2025-12",
+        description: "Assisted customers and maintained inventory records.",
+      },
+    ],
+    education: [
+      {
+        school: "Simon Fraser University",
+        degree: "BBA, Business Administration",
+        year: "2025",
+      },
+    ],
+    stage: "new",
+    notes: "",
+    appliedDate: "2026-07-09T09:00:00.000Z",
+  },
+  {
+    id: "cand_003",
+    jobId: "ep_003",
+    jobTitle: "Office Manager",
+    name: "Jenna Wu",
+    email: "jenna.wu@example.com",
+    phone: "+1 (604) 555-0199",
+    headline: "Office Manager | 6 yrs experience",
+    resumeFilename: "jenna_wu_resume.pdf",
+    skills: ["Office Coordination", "Budgeting", "Leadership", "Vendor Management"],
+    experience: [
+      {
+        title: "Office Manager",
+        company: "Summit Legal Group",
+        startDate: "2020-01",
+        endDate: "Present",
+        description: "Led office operations for a 35-person legal team.",
+      },
+    ],
+    education: [
+      {
+        school: "UBC Sauder School of Business",
+        degree: "BCom, Management",
+        year: "2019",
+      },
+    ],
+    stage: "offer",
+    notes: "Offer extended — awaiting response.",
+    appliedDate: "2026-04-10T09:00:00.000Z",
+  },
+  {
+    id: "cand_004",
+    jobId: "ep_001",
+    jobTitle: "Front Desk Receptionist",
+    name: "Amara Osei",
+    email: "amara.osei@example.com",
+    phone: "+1 (416) 555-0142",
+    headline: "Executive Assistant | 5 yrs office administration",
+    resumeFilename: "amara_osei_resume.pdf",
+    skills: ["Scheduling", "Data Entry", "Microsoft Excel", "Customer Service"],
+    experience: [
+      {
+        title: "Executive Assistant",
+        company: "Lakeside Consulting",
+        startDate: "2021-08",
+        endDate: "Present",
+        description: "Supported C-suite executives with scheduling, travel, and correspondence.",
+      },
+    ],
+    education: [
+      {
+        school: "George Brown College",
+        degree: "Certificate, Office Administration",
+        year: "2020",
+      },
+    ],
+    stage: "reviewed",
+    notes: "",
+    appliedDate: "2026-07-12T14:30:00.000Z",
+  },
+];

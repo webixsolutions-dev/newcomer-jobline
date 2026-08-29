@@ -28,11 +28,14 @@ npm run preview
 
 ## Pages
 - `/` — Home
-- `/browse-jobs` — Browse Jobs (search, filters, pagination)
+- `/jobs` — Browse Jobs (search, filters, pagination)
 - `/post-job` — Post a Job (2-step employer form)
 - `/employers` — Employers (benefits, pricing, testimonials)
 - `/about` — About Us
 - `/contact` — Contact Us (form, info cards, map)
+- `/login`, `/sign-in` — Sign In (Job Seeker / Employer)
+- `/dashboard/*` — Job Seeker Dashboard (auth-gated)
+- `/employer-dashboard` — Employer Dashboard placeholder (auth-gated, future module)
 
 ## Reusable Component Library
 
@@ -115,11 +118,36 @@ StorySection, ContactForm, PostJobForm, PricingPlans, BenefitsGrid, etc.)
 - **Design Review Flags**:
   - The design reference for Module 6 shows a simpler/lighter footer layout (with only 2 link columns and localized address listings). In alignment with instructions, we have preserved Module 5's finalized canonical navy/4-column footer and implemented the custom column details locally inside `AboutSupportInfoRow.jsx`. This discrepancy should be reviewed with the design source of truth before modifying the global footer architecture.
 
+### Employer Dashboard (v0.8)
+- **New authenticated route group**: `/employer-dashboard/*` replaces the earlier placeholder redirect stub. Routes are gated behind `ProtectedRoute` — unauthenticated users redirect to `/login`, job seekers redirect to `/dashboard/seeker`, and only recruiter-role users reach the employer workspace.
+- **Pages**: Overview, Job Postings, Post a Job (create/edit), per-posting Applicants, All Applicants (filterable), Company Profile, Settings.
+- **State**: `EmployerDataContext` (`src/context/EmployerDataContext.jsx`) centralizes mock employer account state (job postings, applicants, company profile) with action functions structured for future API integration. Seeded via `src/data/mockJobPostings.js` and `src/data/mockApplicants.js`.
+- **Reused components**: existing `DashboardLayout` / `Sidebar` (employer nav config), `DashboardTopBanner`, `StatCardRow`, Module 2's `JobPostingForm` (dashboard mode with create/edit), `DeleteAccountSection`, `ConfirmDialog`, and design tokens from `src/index.css`.
+- **New components** (`src/components/employerDashboard/`): `EmployerStatCardRow`, `JobPostingCard`, `JobPostingStatusBadge`, `ApplicantListItem`, `ApplicantProfileDrawer`, `CompanyProfileForm`, `JobPostingsFilterBar`, `ApplicationStatusBadge`.
+- **Pipeline stage mapping** (`src/data/pipelineStages.js`): seeker-facing ↔ employer-facing labels are mapped 1:1 for future backend sync — Applied↔New, In Review↔Reviewed, Shortlisted↔Shortlisted, Interview↔Interview, Offer↔Offer, Not Selected↔Rejected.
+- **Frontend-only**: all data is mock/localStorage-driven; swap `EmployerDataContext` action functions for API calls when the backend is ready.
+
 ### Global Layout & Spacing Refactor (v0.7)
 - **Container horizontal padding** reduced ~40% globally via Tailwind `container.padding` (DEFAULT 0.6rem, sm 0.9rem, lg 1.2rem, xl 1.5rem) and hero‑side padding classes (`.hero-left-pad` / `.hero-right-pad`) scaled proportionally at every breakpoint.
 - **Vertical rhythm tokens** introduced in `src/index.css` (`--space-section-y: 2.5rem`, `--space-component-y: 1.2rem`, `--hero-top-offset: 4.5rem`) and reflected in Tailwind’s spacing scale (overridden `8/12/16/20/24` steps) so all section (`py-16`, `py-24`, …) and component gaps (`gap-8`, `gap-12`, …) are noticeably tighter while keeping button/input padding untouched.
 - **Hero sections** on all six pages now share a single top offset (`var(--hero-top-offset)` = 72 px from the navbar) and identical left‑edge alignment; `PageHero` and `HeroSection` consume the CSS variables instead of hard‑coded values.
 - **Result**: pages feel denser and more intentional, sections sit closer together without visual collision, and every hero lines up perfectly across the site. Mobile/tablet breakpoints receive the same proportional tightening.
+
+### Module 7: Job Seeker Dashboard (v0.8)
+- **New authenticated route group** at `/dashboard/*`, structurally separate from the public `MainLayout` (no marketing Navbar/Footer). Routes:
+  - `/dashboard/overview` — stats, profile completeness, recommended jobs
+  - `/dashboard/find-jobs` — reuses Browse Jobs search/filter/pagination (`JobSearchBar`, `QuickFilterPills`, `FilterSidebar`, `JobList`, `useJobFilters`)
+  - `/dashboard/applications` — application list with status badges and withdraw confirmation
+  - `/dashboard/saved-jobs` — bookmarked jobs with apply/remove actions
+  - `/dashboard/profile` — personal info, resume upload (filename-only), skills, work experience, education CRUD
+  - `/dashboard/settings` — account, notifications, danger zone with confirmed delete
+- **Auth gating**: `RequireAuth` redirects logged-out users to `/sign-in` (alias of `/login`); Employer-role users (`recruiter`) are redirected to `/employer-dashboard` (currently a placeholder stub for a future Employer Dashboard module).
+- **State management**: `DashboardDataContext` (`src/context/DashboardDataContext.jsx`) holds applications, saved jobs, and profile data with action functions (`applyToJob`, `withdrawApplication`, `toggleSaveJob`, `updateProfile`, etc.). Seeded with mock data; structured for future API swap.
+- **New components** in `src/components/dashboard/`: `DashboardLayout`, `DashboardSidebar`, `DashboardUserCard`, `SidebarNavItem`, `DashboardTopBanner`, `StatCardRow`, `RecommendedJobsSection`, `ApplicationStatusBadge`, `ApplicationListItem`, `SavedJobListItem`, `ProfileCompletenessBar`, `ResumeUploadCard`, `RequireAuth`.
+- **JobCard extended** with optional dashboard apply/save state (Applied checkmark badge, bookmark toggle wired to context).
+- **Mock data**: `src/data/mockApplications.js`, `src/data/mockRecommendedJobs.js`.
+- **Sign-in flow**: after login, job seekers land on `/dashboard/overview`; employers land on `/employer-dashboard`.
+- **Responsive**: sidebar collapses to off-canvas drawer on mobile/tablet with hamburger trigger.
 
 ## Notes
 - All job/employer data is mocked in `src/data/` — swap with a real API easily.

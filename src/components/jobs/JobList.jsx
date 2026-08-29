@@ -4,8 +4,16 @@ import Pagination from "./Pagination";
 
 /**
  * Maps the current page of jobs to JobCards and handles empty states.
+ * Pass dashboardMode + handlers to enable apply/save-aware cards.
  */
-const JobList = ({ jobs, currentPage, totalPages, onPageChange }) => {
+const JobList = ({
+  jobs,
+  currentPage,
+  totalPages,
+  onPageChange,
+  dashboardMode = false,
+  getJobProps,
+}) => {
   return (
     <div className="flex flex-col gap-4">
       {jobs.length === 0 ? (
@@ -24,7 +32,12 @@ const JobList = ({ jobs, currentPage, totalPages, onPageChange }) => {
       ) : (
         <>
           {jobs.map((job) => (
-            <JobCard key={job.id} job={job} />
+            <JobCard
+              key={job.id}
+              job={job}
+              dashboardMode={dashboardMode}
+              {...(getJobProps ? getJobProps(job) : {})}
+            />
           ))}
           <Pagination
             currentPage={currentPage}

@@ -78,12 +78,12 @@ export function AuthProvider({ children }) {
   }
 
   // Real backend sign in
-  async function signIn(email, password) {
+  async function signIn(username, password) {
     setError(null);
     try {
       const data = await api("/v1/auth/login", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
       if (data && data.session) {
         saveSession(data.session);

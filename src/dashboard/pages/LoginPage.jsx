@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { HiOutlineUser, HiOutlineBriefcase, HiOutlineEnvelope, HiOutlineLockClosed, HiOutlineEye, HiOutlineEyeSlash, HiOutlineArrowLeft } from "react-icons/hi2";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import { HiOutlineUser, HiOutlineBriefcase, HiOutlineLockClosed, HiOutlineEye, HiOutlineEyeSlash, HiOutlineArrowLeft } from "react-icons/hi2";
 import { useAuth } from "../auth/AuthContext";
 import Logo from "../../components/common/Logo";
 
 export default function LoginPage() {
   const { login, signIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const returnTo = location.state?.from;
 
   const [role, setRole] = useState("seeker");
-  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -24,11 +24,23 @@ export default function LoginPage() {
 
     const nextRole = role === "seeker" ? "job_seeker" : "recruiter";
 
-    if (email && password) {
-      try {
-        await signIn(email, password);
-        setLoading(false);
+    function redirectAfterLogin(userRole) {
+      if (returnTo && userRole === "job_seeker" && returnTo.startsWith("/dashboard")) {
+        navigate(returnTo, { replace: true });
+      } else if (userRole === "job_seeker") {
+        navigate("/dashboard/seeker", { replace: true });
+      } else if (userRole === "recruiter") {
+        navigate("/employer-dashboard", { replace: true });
+      } else {
         navigate("/", { replace: true });
+      }
+    }
+
+    if (username && password) {
+      try {
+        const user = await signIn(username, password);
+        setLoading(false);
+        redirectAfterLogin(user?.role || nextRole);
         return;
       } catch (err) {
         console.warn("Backend auth failed, trying mock role fallback:", err);
@@ -42,7 +54,7 @@ export default function LoginPage() {
 
     login(nextRole);
     setLoading(false);
-    navigate("/", { replace: true });
+    redirectAfterLogin(nextRole);
   }
 
   return (
@@ -112,31 +124,12 @@ export default function LoginPage() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-5" autoComplete="off">
             {errorMsg && (
               <div className="p-3.5 bg-red-50 text-red-800 rounded-xl border border-red-100 text-xs font-semibold">
                 {errorMsg}
               </div>
             )}
-            {/* Email */}
-            <div>
-              <label className="block text-xs font-semibold text-[#4f739f] mb-1.5">
-                Email address <span className="text-[#F5A623]">*</span>
-              </label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-[#7f9abd]">
-                  <HiOutlineEnvelope className="text-lg" />
-                </span>
-                <input
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white border border-[#d5dfeb] rounded-xl py-3 pl-11 pr-4 text-sm text-[#0B2545] placeholder-[#7f9abd] focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-colors"
-                />
-              </div>
-            </div>
-
             {/* Username */}
             <div>
               <label className="block text-xs font-semibold text-[#4f739f] mb-1.5">
@@ -148,9 +141,11 @@ export default function LoginPage() {
                 </span>
                 <input
                   type="text"
+                  name="username"
                   placeholder="your.username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="off"
                   className="w-full bg-white border border-[#d5dfeb] rounded-xl py-3 pl-11 pr-4 text-sm text-[#0B2545] placeholder-[#7f9abd] focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-colors"
                 />
               </div>
@@ -167,9 +162,11 @@ export default function LoginPage() {
                 </span>
                 <input
                   type={showPassword ? "text" : "password"}
+                  name="password"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="new-password"
                   className="w-full bg-white border border-[#d5dfeb] rounded-xl py-3 pl-11 pr-12 text-sm text-[#0B2545] placeholder-[#7f9abd] focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-colors"
                 />
                 <button
@@ -186,17 +183,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Remember / Forgot */}
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 rounded border-[#d5dfeb] bg-white text-[#F5A623] focus:ring-0 cursor-pointer"
-                />
-                <span className="text-xs text-[#4f739f]">Remember me</span>
-              </label>
+            <div className="flex justify-end">
               <Link
                 to="/forgot-password"
                 className="text-xs font-bold text-[#F5A623] hover:text-[#dc8113] transition-colors"

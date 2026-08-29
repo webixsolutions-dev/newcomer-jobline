@@ -99,15 +99,33 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Sign In / Sign Out */}
+          {/* Sign In / Dashboard / Sign Out */}
           {isAuthenticated ? (
-            <button
-              onClick={logout}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-navy-50 text-navy-900 font-bold rounded-full text-sm border-2 border-navy-900 transition-all duration-200"
-            >
-              <HiUser className="text-base" />
-              Sign Out
-            </button>
+            <>
+              {role === "job_seeker" && (
+                <Link
+                  to="/dashboard/overview"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white font-bold rounded-full text-sm transition-all duration-200 shadow-soft"
+                >
+                  Dashboard
+                </Link>
+              )}
+              {role === "recruiter" && (
+                <Link
+                  to="/employer-dashboard"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white font-bold rounded-full text-sm transition-all duration-200 shadow-soft"
+                >
+                  Dashboard
+                </Link>
+              )}
+              <button
+                onClick={logout}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-navy-50 text-navy-900 font-bold rounded-full text-sm border-2 border-navy-900 transition-all duration-200"
+              >
+                <HiUser className="text-base" />
+                Sign Out
+              </button>
+            </>
           ) : (
             <Link
               to="/login"
@@ -184,16 +202,36 @@ const Navbar = () => {
               </nav>
               <div className="mt-auto p-5 border-t border-navy-100 flex flex-col gap-3">
                 {isAuthenticated ? (
-                  <button
-                    onClick={() => {
-                      logout();
-                      setOpen(false);
-                    }}
-                    className="flex w-full items-center justify-center gap-2 px-4 py-3 bg-white text-navy-900 font-bold rounded-xl border-2 border-navy-900 text-sm"
-                  >
-                    <HiUser className="text-base" />
-                    Sign Out
-                  </button>
+                  <>
+                    {role === "job_seeker" && (
+                      <Link
+                        to="/dashboard/overview"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-teal-700 text-white font-bold rounded-xl text-sm"
+                      >
+                        Dashboard
+                      </Link>
+                    )}
+                    {role === "recruiter" && (
+                      <Link
+                        to="/employer-dashboard"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-teal-700 text-white font-bold rounded-xl text-sm"
+                      >
+                        Dashboard
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => {
+                        logout();
+                        setOpen(false);
+                      }}
+                      className="flex w-full items-center justify-center gap-2 px-4 py-3 bg-white text-navy-900 font-bold rounded-xl border-2 border-navy-900 text-sm"
+                    >
+                      <HiUser className="text-base" />
+                      Sign Out
+                    </button>
+                  </>
                 ) : (
                   <Link
                     to="/login"

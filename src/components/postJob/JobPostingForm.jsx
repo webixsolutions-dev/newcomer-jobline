@@ -1,5 +1,5 @@
 // src/components/postJob/JobPostingForm.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   HiOutlineMapPin,
@@ -52,13 +52,25 @@ const INITIAL_FORM = {
 /**
  * Fully controlled job posting form.
  * Validates required fields on submit.
- * handleSubmit is structured for future API integration.
- * handleSaveDraft is structured for future localStorage / API integration.
+ * Pass dashboardMode + callbacks to use inside the employer dashboard.
  */
-const JobPostingForm = () => {
-  const [form, setForm] = useState(INITIAL_FORM);
+const JobPostingForm = ({
+  initialValues = null,
+  dashboardMode = false,
+  heading = "Create Your Job Posting",
+  subheading = "Fill in the details below to reach qualified newcomer candidates across Canada.",
+  onSubmit,
+  onSaveDraft,
+  hideSuccessState = false,
+}) => {
+  const [form, setForm] = useState(initialValues ?? INITIAL_FORM);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+
+  // Sync when editing an existing posting
+  useEffect(() => {
+    if (initialValues) setForm(initialValues);
+  }, [initialValues]);
 
   const handleChange = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -93,12 +105,20 @@ const JobPostingForm = () => {
       setErrors(newErrors);
       return;
     }
+    if (dashboardMode && onSubmit) {
+      onSubmit(form, "Active");
+      return;
+    }
     // ── TODO: replace with API call ──
     console.log("[PostJob] Submit payload:", form);
     setSubmitted(true);
   };
 
   const handleSaveDraft = () => {
+    if (dashboardMode && onSaveDraft) {
+      onSaveDraft(form);
+      return;
+    }
     // ── TODO: replace with localStorage / API integration ──
     console.log("[PostJob] Draft saved:", form);
     alert("Draft saved! (stub — will integrate with API or localStorage)");
@@ -111,7 +131,7 @@ const JobPostingForm = () => {
   };
 
   // ── Success State ──
-  if (submitted) {
+  if (submitted && !hideSuccessState) {
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -148,16 +168,15 @@ const JobPostingForm = () => {
       className="bg-white rounded-2xl border border-navy-100 shadow-card p-6 sm:p-8"
     >
       {/* Heading */}
-      <div className="mb-6">
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-navy-900 font-heading">
-          Create Your Job Posting
-        </h2>
-        <p className="text-navy-400 text-sm mt-2">
-          Fill in the details below to reach qualified newcomer candidates across
-          Canada.
-        </p>
-        <div className="w-10 h-1 bg-gold-500 rounded-full mt-3" />
-      </div>
+      {!dashboardMode && (
+        <div className="mb-6">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-navy-900 font-heading">
+            {heading}
+          </h2>
+          <p className="text-navy-400 text-sm mt-2">{subheading}</p>
+          <div className="w-10 h-1 bg-gold-500 rounded-full mt-3" />
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} noValidate>
         {/* ── Two-column grid ── */}
@@ -316,7 +335,7 @@ const JobPostingForm = () => {
             className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-teal-700 hover:bg-teal-800 text-white font-bold rounded-full transition-all duration-200 shadow-soft text-sm sm:text-base"
           >
             <HiOutlineDocumentAdd className="text-lg" />
-            Continue to Next Step
+            {dashboardMode ? "Publish Job" : "Continue to Next Step"}
           </button>
           <button
             type="button"

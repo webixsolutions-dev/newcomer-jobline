@@ -24,7 +24,7 @@ export function useServiceCareJobs(query = {}) {
     ])
       .then(([jobsData, catsData]) => {
         if (active) {
-          setRawJobs(jobsData || []);
+          setRawJobs(jobsData?.items || []);
           setCategories(catsData || []);
           setLoading(false);
         }

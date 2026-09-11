@@ -6,39 +6,21 @@ import {
   HiOutlineGlobeAlt,
   HiOutlineHeart,
 } from "react-icons/hi2";
-
-const STATS = [
-  {
-    icon: HiOutlineUserGroup,
-    value: "5,000+",
-    label: "Job Seekers",
-    desc: "Active and growing community",
-  },
-  {
-    icon: HiOutlineBuildingOffice2,
-    value: "1,200+",
-    label: "Employers",
-    desc: "Across industries hiring with us",
-  },
-  {
-    icon: HiOutlineGlobeAlt,
-    value: null,
-    label: "Canada-Wide Reach",
-    desc: "From coast to coast, we've got you covered",
-  },
-  {
-    icon: HiOutlineHeart,
-    value: null,
-    label: "Inclusive Hiring Network",
-    desc: "Building stronger, more diverse teams",
-  },
-];
+import { usePublicDataset } from "../../hooks/usePublicDataset";
 
 /**
  * Wide stats strip card (white background within the cream band).
  * Reuses the stat-display pattern from TrustedStatsStrip.
  */
 const EmployerStatsStrip = () => {
+  const { dataset, loading } = usePublicDataset();
+  const count = (items) => loading ? "—" : items?.length ?? 0;
+  const stats = [
+    { icon: HiOutlineUserGroup, value: count(dataset?.jobs), label: "Active Jobs", desc: "Live openings on this portal" },
+    { icon: HiOutlineBuildingOffice2, value: count(dataset?.companies), label: "Hiring Companies", desc: "Active employers in the network" },
+    { icon: HiOutlineGlobeAlt, value: count(dataset?.categories), label: "Job Categories", desc: "Career areas available to candidates" },
+    { icon: HiOutlineHeart, value: null, label: "Inclusive Hiring Network", desc: "Building stronger, more diverse teams" },
+  ];
   return (
     <section className="py-10 sm:py-12 bg-navy-50/60">
       <div className="container-app">
@@ -50,7 +32,7 @@ const EmployerStatsStrip = () => {
           className="bg-white rounded-2xl border border-navy-100 shadow-card overflow-hidden"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-navy-100">
-            {STATS.map((stat, i) => (
+            {stats.map((stat, i) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 16 }}

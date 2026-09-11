@@ -63,8 +63,11 @@ const HeroSection = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log("Search:", { keyword, location, category });
-    navigate("/browse-jobs");
+    const params = new URLSearchParams();
+    if (keyword.trim()) params.set("keyword", keyword.trim());
+    if (location.trim()) params.set("location", location.trim());
+    if (category !== "All categories") params.set("category", category);
+    navigate(`/jobs${params.toString() ? `?${params}` : ""}`);
   };
 
   return (

@@ -5,13 +5,13 @@ import { useAuth } from "../auth/AuthContext";
 import Logo from "../../components/common/Logo";
 
 export default function LoginPage() {
-  const { login, signIn } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const returnTo = location.state?.from;
 
   const [role, setRole] = useState("seeker");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -21,8 +21,6 @@ export default function LoginPage() {
     e.preventDefault();
     setErrorMsg(null);
     setLoading(true);
-
-    const nextRole = role === "seeker" ? "job_seeker" : "recruiter";
 
     function redirectAfterLogin(userRole) {
       if (returnTo && userRole === "job_seeker" && returnTo.startsWith("/dashboard")) {
@@ -36,25 +34,14 @@ export default function LoginPage() {
       }
     }
 
-    if (username && password) {
-      try {
-        const user = await signIn(username, password);
-        setLoading(false);
-        redirectAfterLogin(user?.role || nextRole);
-        return;
-      } catch (err) {
-        console.warn("Backend auth failed, trying mock role fallback:", err);
-        if (err.message.includes("credentials") || err.message.includes("password") || err.message.includes("user")) {
-          setErrorMsg(err.message);
-          setLoading(false);
-          return;
-        }
-      }
+    try {
+      const user = await signIn(email, password);
+      redirectAfterLogin(user.role);
+    } catch (err) {
+      setErrorMsg(err.message || "Sign in failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    login(nextRole);
-    setLoading(false);
-    redirectAfterLogin(nextRole);
   }
 
   return (
@@ -130,22 +117,23 @@ export default function LoginPage() {
                 {errorMsg}
               </div>
             )}
-            {/* Username */}
+            {/* Email */}
             <div>
               <label className="block text-xs font-semibold text-[#4f739f] mb-1.5">
-                Username <span className="text-[#F5A623]">*</span>
+                Email address <span className="text-[#F5A623]">*</span>
               </label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-[#7f9abd]">
                   <HiOutlineUser className="text-lg" />
                 </span>
                 <input
-                  type="text"
-                  name="username"
-                  placeholder="your.username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  autoComplete="off"
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  required
                   className="w-full bg-white border border-[#d5dfeb] rounded-xl py-3 pl-11 pr-4 text-sm text-[#0B2545] placeholder-[#7f9abd] focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-colors"
                 />
               </div>
@@ -166,7 +154,8 @@ export default function LoginPage() {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="new-password"
+                  autoComplete="current-password"
+                  required
                   className="w-full bg-white border border-[#d5dfeb] rounded-xl py-3 pl-11 pr-12 text-sm text-[#0B2545] placeholder-[#7f9abd] focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-colors"
                 />
                 <button
@@ -183,21 +172,15 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex justify-end">
-              <Link
-                to="/forgot-password"
-                className="text-xs font-bold text-[#F5A623] hover:text-[#dc8113] transition-colors"
-              >
-                Forgot password?
-              </Link>
-            </div>
-
             {/* Submit */}
             <button
               type="submit"
+              disabled={loading}
               className="w-full mt-2 bg-[#F5A623] hover:bg-[#dc8113] text-[#0B2545] font-bold py-3 px-6 rounded-xl transition-all duration-200 shadow-sm text-sm sm:text-base flex items-center justify-center gap-2 group"
             >
-              Log In
+              {loading ? (
+                <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#0B2545]/30 border-t-[#0B2545]" />
+              ) : "Log In"}
               <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
             </button>
           </form>

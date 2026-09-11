@@ -15,7 +15,7 @@ export default function JobApplicantsPage() {
     advanceApplicantStage,
     rejectApplicant,
     updateApplicantStage,
-    updateApplicantNotes,
+    viewApplicantResume,
   } = useEmployerData();
 
   const [selectedApplicant, setSelectedApplicant] = useState(null);
@@ -77,7 +77,7 @@ export default function JobApplicantsPage() {
         open={Boolean(selectedApplicant)}
         onClose={() => setSelectedApplicant(null)}
         onStageChange={updateApplicantStage}
-        onNotesChange={updateApplicantNotes}
+        onViewResume={viewApplicantResume}
       />
     </div>
   );

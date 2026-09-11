@@ -1,71 +1,70 @@
-// src/lib/SavedJobsContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
-import { api } from "./api";
+import { getSeekerDashboard, saveJob, unsaveJob } from "./jobs";
+import { readSession } from "./auth/session";
 import { useAuth } from "../dashboard/auth/AuthContext";
 
 const SavedJobsContext = createContext(null);
 
 export function SavedJobsProvider({ children }) {
   const [savedIds, setSavedIds] = useState(new Set());
+  const [error, setError] = useState(null);
   const { role, isAuthenticated } = useAuth();
-  
-  // Use mock-token if no backend token exists in local storage yet
-  const token = localStorage.getItem("newcomer_jobline_token") || "mock-token";
 
   useEffect(() => {
-    if (isAuthenticated && role === "job_seeker") {
-      api("/v1/me/saved-jobs", {}, token)
-        .then((data) => {
-          const ids = new Set((data || []).map((s) => String(s.job_id)));
-          setSavedIds(ids);
-        })
-        .catch((err) => {
-          console.error("Failed to load saved jobs:", err);
-        });
-    } else {
+    let active = true;
+    const token = readSession()?.access_token;
+    if (!isAuthenticated || role !== "job_seeker" || !token) {
       setSavedIds(new Set());
+      return undefined;
     }
-  }, [isAuthenticated, role, token]);
+
+    getSeekerDashboard(token)
+      .then((data) => {
+        if (active) setSavedIds(new Set((data?.savedJobIds || []).map(String)));
+      })
+      .catch((loadError) => {
+        if (active) setError(loadError.message);
+      });
+
+    return () => { active = false; };
+  }, [isAuthenticated, role]);
 
   const isSaved = (jobId) => savedIds.has(String(jobId));
 
-  const toggleSaved = async (jobId) => {
-    const idStr = String(jobId);
-    const wasSaved = savedIds.has(idStr);
-    
-    // Optimistic Update
-    setSavedIds((prev) => {
-      const next = new Set(prev);
-      if (wasSaved) next.delete(idStr);
-      else next.add(idStr);
+  async function toggleSaved(jobId) {
+    const token = readSession()?.access_token;
+    if (!token || role !== "job_seeker") {
+      throw new Error("Sign in as a job seeker to save jobs.");
+    }
+
+    const id = String(jobId);
+    const wasSaved = savedIds.has(id);
+    setError(null);
+    setSavedIds((current) => {
+      const next = new Set(current);
+      if (wasSaved) next.delete(id);
+      else next.add(id);
       return next;
     });
 
     try {
-      if (wasSaved) {
-        await api(`/v1/me/saved-jobs/${idStr}`, { method: "DELETE" }, token);
-      } else {
-        await api(`/v1/me/saved-jobs/${idStr}`, {
-          method: "POST",
-          body: JSON.stringify({}),
-        }, token);
-      }
-    } catch (err) {
-      console.error("Failed to toggle saved job:", err);
-      // Rollback on error
-      setSavedIds((prev) => {
-        const next = new Set(prev);
-        if (wasSaved) next.add(idStr);
-        else next.delete(idStr);
+      if (wasSaved) await unsaveJob(id, token);
+      else await saveJob(id, token);
+      return !wasSaved;
+    } catch (requestError) {
+      setSavedIds((current) => {
+        const next = new Set(current);
+        if (wasSaved) next.add(id);
+        else next.delete(id);
         return next;
       });
+      setError(requestError.message);
+      throw requestError;
     }
-  };
-
-  const value = { savedIds, isSaved, toggleSaved };
+  }
 
   return (
-    <SavedJobsContext.Provider value={value}>
+    <SavedJobsContext.Provider value={{ savedIds, isSaved, toggleSaved, error }}>
       {children}
     </SavedJobsContext.Provider>
   );

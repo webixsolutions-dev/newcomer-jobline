@@ -46,7 +46,7 @@ const HowItWorks = () => {
         {/* CTA Button */}
         <div className="text-center mt-4">
           <a
-            href="/browse-jobs"
+            href="/jobs"
             className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 text-white font-bold rounded-lg hover:bg-amber-600 transition-colors"
           >
             Get Started Today →

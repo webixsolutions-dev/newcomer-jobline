@@ -14,6 +14,21 @@ const STATUS_STYLES = {
     text: "var(--color-primary)",
     border: "var(--color-primary)",
   },
+  "Pending Review": {
+    bg: "var(--status-pending-bg)",
+    text: "var(--status-pending-text)",
+    border: "transparent",
+  },
+  Expired: {
+    bg: "var(--status-closed-bg)",
+    text: "var(--status-closed-text)",
+    border: "transparent",
+  },
+  Removed: {
+    bg: "var(--status-rejected-bg)",
+    text: "var(--status-rejected-text)",
+    border: "transparent",
+  },
 };
 
 /** Status pill for job postings: Active (teal), Draft (muted), Closed (outline navy). */

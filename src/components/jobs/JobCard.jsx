@@ -8,12 +8,12 @@ import {
   HiOutlineCheckCircle,
 } from "react-icons/hi2";
 import { useSavedJobs } from "../../lib/SavedJobsContext";
-import { useOptionalDashboardData } from "../../context/DashboardDataContext";
 import { useAuth } from "../../dashboard/auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Single job listing card.
- * Supports optional dashboard mode with apply/save state from props or DashboardDataContext.
+ * Supports public and authenticated dashboard save/apply states.
  */
 const JobCard = ({
   job,
@@ -26,20 +26,19 @@ const JobCard = ({
   saveLabel,
 }) => {
   const { isAuthenticated, role } = useAuth();
+  const navigate = useNavigate();
   const savedJobsCtx = useSavedJobs();
-  const dashboardCtx = useOptionalDashboardData();
-
-  const inDashboard = dashboardMode || Boolean(dashboardCtx);
-  const useDashboardActions = inDashboard && (onApply || dashboardCtx);
+  const inDashboard = dashboardMode;
+  const useDashboardActions = inDashboard && Boolean(onApply);
 
   const saved = isSavedProp ?? (
     useDashboardActions
-      ? dashboardCtx?.isJobSaved(job.id)
+      ? Boolean(isSavedProp)
       : savedJobsCtx.isSaved(job.id)
   );
 
   const applied = isAppliedProp ?? (
-    useDashboardActions ? dashboardCtx?.isJobApplied(job.id) : false
+    useDashboardActions ? Boolean(isAppliedProp) : false
   );
 
   const showDashboardApply =
@@ -55,15 +54,17 @@ const JobCard = ({
   };
   const badgeClass = getBadgeColor(job.category);
 
-  function handleToggleSave(e) {
+  async function handleToggleSave(e) {
     e.preventDefault();
     e.stopPropagation();
+    if (!isAuthenticated || role !== "job_seeker") {
+      navigate("/login", { state: { from: `/jobs/${job.id}` } });
+      return;
+    }
     if (onToggleSave) {
-      onToggleSave();
-    } else if (dashboardCtx) {
-      dashboardCtx.toggleSaveJob(job);
+      await onToggleSave();
     } else {
-      savedJobsCtx.toggleSaved(job.id);
+      await savedJobsCtx.toggleSaved(job.id).catch(() => null);
     }
   }
 
@@ -71,8 +72,6 @@ const JobCard = ({
     e.preventDefault();
     if (onApply) {
       onApply();
-    } else if (dashboardCtx) {
-      dashboardCtx.applyToJob(job);
     }
   }
 

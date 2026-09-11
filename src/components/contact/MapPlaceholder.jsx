@@ -23,7 +23,7 @@ const MapPlaceholder = () => {
 
       {/* CSS-drawn map elements layered on top for a convincing look without an image if needed */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-        {/* Fake streets (very simplified) */}
+        {/* Decorative street lines */}
         <div className="absolute inset-0 flex items-center justify-center opacity-30">
           <div className="w-full h-4 bg-white transform -rotate-12 absolute" />
           <div className="h-full w-4 bg-white transform rotate-12 absolute" />

@@ -2,16 +2,7 @@
 import { useState } from "react";
 import { HiOutlineMagnifyingGlass, HiOutlineMapPin, HiOutlineBriefcase } from "react-icons/hi2";
 import { FaLayerGroup } from "react-icons/fa6";
-
-const JOB_CATEGORIES = [
-  "All categories",
-  "Office & Administration",
-  "Customer Service",
-  "Technology & IT",
-  "Skilled Trades",
-  "Healthcare Support",
-  "Hospitality",
-];
+import { usePublicDataset } from "../../hooks/usePublicDataset";
 
 const EMPLOYMENT_TYPES = [
   "All types",
@@ -26,6 +17,8 @@ const EMPLOYMENT_TYPES = [
  * Extended search bar floating below the hero.
  */
 const JobSearchBar = ({ updateFilters, listRef }) => {
+  const { dataset } = usePublicDataset();
+  const categories = dataset?.categories || [];
   const [localKeyword, setLocalKeyword] = useState("");
   const [localLocation, setLocalLocation] = useState("");
   const [localCategory, setLocalCategory] = useState("All categories");
@@ -93,11 +86,8 @@ const JobSearchBar = ({ updateFilters, listRef }) => {
                 onChange={(e) => setLocalCategory(e.target.value)}
                 className="w-full bg-transparent text-navy-900 text-sm focus:outline-none cursor-pointer appearance-none"
               >
-                {JOB_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
+                <option value="All categories">All categories</option>
+                {categories.map((cat) => <option key={cat.id || cat.slug} value={cat.name}>{cat.name}</option>)}
               </select>
             </div>
           </div>

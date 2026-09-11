@@ -1,191 +1,275 @@
-import { createContext, useContext, useMemo, useState } from "react";
-import { mockEmployerJobPostings } from "../data/mockJobPostings";
-import { mockEmployerApplicants } from "../data/mockApplicants";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createRecruiterJob,
+  getApplicationResumeUrl,
+  getPublicDataset,
+  getRecruiterApplications,
+  getRecruiterDashboard,
+  updateApplicationStatus,
+  updateRecruiterJob,
+} from "../lib/jobs";
+import { readSession } from "../lib/auth/session";
 import { getNextEmployerStage } from "../data/pipelineStages";
-
-const STORAGE_KEY = "newcomer_jobline_employer_data";
-
-const defaultCompanyProfile = {
-  name: "Northbridge Offices Inc.",
-  logoFilename: null,
-  industry: "Real Estate & Property Management",
-  size: "51-200",
-  website: "https://northbridgeoffices.ca",
-  location: "Vancouver, BC",
-  description:
-    "Northbridge Offices provides modern workspace solutions across British Columbia, supporting growing teams with flexible office environments.",
-};
-
-function readStoredData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-function persistData(data) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch {
-    // ignore quota errors in mock mode
-  }
-}
-
-function countApplicantsForJob(applicants, jobId) {
-  return applicants.filter((a) => a.jobId === jobId).length;
-}
-
-function withApplicantCounts(postings, applicants) {
-  return postings.map((p) => ({
-    ...p,
-    applicantCount: countApplicantsForJob(applicants, p.id),
-  }));
-}
 
 const EmployerDataContext = createContext(null);
 
-export function EmployerDataProvider({ children }) {
-  const stored = readStoredData();
+const EMPTY_COMPANY = {
+  id: null,
+  name: "",
+  website: "",
+  registration_number: "",
+  description: "",
+  verification_status: "pending",
+  status: "pending",
+};
 
-  const [jobPostings, setJobPostings] = useState(
-    stored?.jobPostings ?? mockEmployerJobPostings
-  );
-  const [applicants, setApplicants] = useState(stored?.applicants ?? mockEmployerApplicants);
-  const [companyProfile, setCompanyProfile] = useState(
-    stored?.companyProfile ?? defaultCompanyProfile
-  );
+const STATUS_LABELS = {
+  active: "Active",
+  pending_review: "Pending Review",
+  closed: "Closed",
+  expired: "Expired",
+  removed: "Removed",
+};
+
+const EMPLOYMENT_LABELS = {
+  full_time: "Full-Time",
+  part_time: "Part-Time",
+  contract: "Contract",
+  temporary: "Temporary",
+  internship: "Internship",
+  seasonal: "Seasonal",
+};
+
+const EMPLOYMENT_VALUES = Object.fromEntries(Object.entries(EMPLOYMENT_LABELS).map(([key, value]) => [value, key]));
+
+function salaryLabel(job) {
+  if (job.salary_min == null && job.salary_max == null) return "";
+  const min = job.salary_min != null ? Number(job.salary_min).toLocaleString() : "";
+  const max = job.salary_max != null ? Number(job.salary_max).toLocaleString() : "";
+  return `${job.salary_currency || "CAD"} ${min}${min && max ? " - " : ""}${max}`.trim();
+}
+
+function normalizePosting(job, company) {
+  return {
+    id: String(job.id),
+    jobTitle: job.title || "Untitled job",
+    companyName: job.companies?.name || company?.name || "Employer",
+    location: job.is_remote ? "Remote" : [job.city, job.province].filter(Boolean).join(", ") || "Canada",
+    jobCategory: job.categories?.name || String(job.category_id || ""),
+    categoryId: job.category_id,
+    employmentType: EMPLOYMENT_LABELS[job.employment_type] || job.employment_type || "",
+    salaryRange: salaryLabel(job),
+    jobDescription: job.description || "",
+    status: STATUS_LABELS[job.status] || job.status,
+    postedDate: job.published_at || job.created_at,
+    applicantCount: job.applications_count || 0,
+    raw: job,
+  };
+}
+
+function normalizeApplicant(application) {
+  const profile = application.profiles || {};
+  return {
+    id: String(application.id),
+    jobId: String(application.job_id),
+    jobTitle: application.jobs?.title || "Job",
+    name: profile.full_name || "Candidate",
+    headline: profile.headline || "Job seeker",
+    email: profile.email || "Not provided",
+    phone: profile.phone || "Not provided",
+    stage: application.status,
+    appliedDate: application.created_at,
+    resumeFilename: application.resume_path?.split("/").pop() || "Resume",
+    skills: Array.isArray(profile.skills) ? profile.skills : [],
+    experience: Array.isArray(profile.experience) ? profile.experience : [],
+    education: Array.isArray(profile.education) ? profile.education : [],
+    raw: application,
+  };
+}
+
+function parseLocation(location) {
+  const value = String(location || "").trim();
+  if (/^remote/i.test(value)) return { workplace_type: "remote", is_remote: true, city: null, province: null };
+  const parts = value.split(",").map((item) => item.trim()).filter(Boolean);
+  return {
+    workplace_type: "onsite",
+    is_remote: false,
+    city: parts[0] || null,
+    province: parts.slice(1).join(", ") || null,
+  };
+}
+
+function parseSalary(value) {
+  const numbers = String(value || "").match(/\d[\d,]*/g)?.map((item) => Number(item.replace(/,/g, ""))) || [];
+  return {
+    salary_min: numbers[0] || null,
+    salary_max: numbers[1] || numbers[0] || null,
+    salary_currency: "CAD",
+    salary_period: "yearly",
+  };
+}
+
+export function EmployerDataProvider({ children }) {
+  const [jobPostings, setJobPostings] = useState([]);
+  const [applicants, setApplicants] = useState([]);
+  const [companyProfile, setCompanyProfile] = useState(EMPTY_COMPANY);
+  const [categories, setCategories] = useState([]);
+  const [metrics, setMetrics] = useState({});
+  const [pipeline, setPipeline] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [flashMessage, setFlashMessage] = useState(null);
 
-  function save(next) {
-    const payload = {
-      jobPostings: next.jobPostings ?? jobPostings,
-      applicants: next.applicants ?? applicants,
-      companyProfile: next.companyProfile ?? companyProfile,
-    };
-    persistData(payload);
-    if (next.jobPostings) setJobPostings(next.jobPostings);
-    if (next.applicants) setApplicants(next.applicants);
-    if (next.companyProfile) setCompanyProfile(next.companyProfile);
+  function token() {
+    const value = readSession()?.access_token;
+    if (!value) throw new Error("Your session has expired. Please sign in again.");
+    return value;
   }
 
   function showFlash(message) {
     setFlashMessage(message);
-    setTimeout(() => setFlashMessage(null), 4000);
+    window.setTimeout(() => setFlashMessage(null), 4500);
   }
 
-  function createJobPosting(data, status = "Active") {
-    const id = `ep_${Date.now()}`;
-    const posting = {
-      id,
-      ...data,
-      status,
-      postedDate: new Date().toISOString(),
-      applicantCount: 0,
+  const reload = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const accessToken = token();
+      const [dashboard, applications, dataset] = await Promise.all([
+        getRecruiterDashboard(accessToken),
+        getRecruiterApplications(accessToken),
+        getPublicDataset(),
+      ]);
+      const company = dashboard.companies?.[0] || EMPTY_COMPANY;
+      const publicJobs = new Map((dataset?.jobs || []).map((job) => [String(job.id), job]));
+      const postings = (dashboard.jobs || []).map((job) => {
+        const publicJob = publicJobs.get(String(job.id));
+        return normalizePosting({ ...job, ...(publicJob || {}) }, company);
+      });
+      setCompanyProfile(company);
+      setCategories(dataset?.categories || []);
+      setJobPostings(postings);
+      setApplicants((applications?.items || []).map(normalizeApplicant));
+      setMetrics(dashboard.metrics || {});
+      setPipeline(dashboard.pipeline || {});
+    } catch (loadError) {
+      setError(loadError.message || "Employer data could not be loaded.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { reload(); }, [reload]);
+
+  function formPayload(form) {
+    const category = categories.find((item) => item.name === form.jobCategory || String(item.id) === String(form.jobCategory));
+    if (!category) throw new Error("Choose a valid job category.");
+    return {
+      title: form.jobTitle.trim(),
+      category_id: category.id,
+      ...parseLocation(form.location),
+      experience_level: "mid_level",
+      employment_type: EMPLOYMENT_VALUES[form.employmentType] || form.employmentType,
+      ...parseSalary(form.salaryRange),
+      skills: [],
+      description: form.jobDescription.trim(),
+      audience_sites: [],
     };
-    const next = [posting, ...jobPostings];
-    save({ jobPostings: next });
-    showFlash(status === "Draft" ? "Draft saved." : "Job posting published.");
-    return posting;
   }
 
-  function updateJobPosting(id, data, status) {
-    const next = jobPostings.map((p) =>
-      p.id === id
-        ? {
-            ...p,
-            ...data,
-            ...(status ? { status } : {}),
-          }
-        : p
-    );
-    save({ jobPostings: next });
-    showFlash("Job posting updated.");
+  async function createJobPosting(form) {
+    try {
+      await createRecruiterJob(formPayload(form), token());
+      showFlash("Job posting published.");
+      await reload();
+    } catch (requestError) {
+      showFlash(requestError.message);
+      throw requestError;
+    }
   }
 
-  function closeJobPosting(id) {
-    const next = jobPostings.map((p) => (p.id === id ? { ...p, status: "Closed" } : p));
-    save({ jobPostings: next });
-    showFlash("Job posting closed.");
+  async function updateJobPosting(id, form) {
+    try {
+      await updateRecruiterJob(id, formPayload(form), token());
+      showFlash("Job posting updated.");
+      await reload();
+    } catch (requestError) {
+      showFlash(requestError.message);
+      throw requestError;
+    }
   }
 
-  function deleteJobPosting(id) {
-    const nextPostings = jobPostings.filter((p) => p.id !== id);
-    const nextApplicants = applicants.filter((a) => a.jobId !== id);
-    save({ jobPostings: nextPostings, applicants: nextApplicants });
-    showFlash("Job posting deleted.");
+  async function closeJobPosting(id) {
+    try {
+      await updateRecruiterJob(id, { status: "closed" }, token());
+      showFlash("Job posting closed.");
+      await reload();
+    } catch (requestError) {
+      showFlash(requestError.message);
+    }
+  }
+
+  async function updateApplicantStage(id, status) {
+    try {
+      await updateApplicationStatus(id, status, token());
+      setApplicants((current) => current.map((item) => item.id === String(id) ? { ...item, stage: status } : item));
+      showFlash("Applicant stage updated.");
+    } catch (requestError) {
+      showFlash(requestError.message);
+    }
   }
 
   function advanceApplicantStage(id) {
-    const next = applicants.map((a) => {
-      if (a.id !== id) return a;
-      const nextStage = getNextEmployerStage(a.stage);
-      return { ...a, stage: nextStage };
-    });
-    save({ applicants: next });
+    const applicant = applicants.find((item) => item.id === String(id));
+    const next = getNextEmployerStage(applicant?.stage);
+    if (applicant && next !== applicant.stage) updateApplicantStage(id, next);
   }
 
-  function rejectApplicant(id) {
-    const next = applicants.map((a) => (a.id === id ? { ...a, stage: "rejected" } : a));
-    save({ applicants: next });
-    showFlash("Applicant rejected.");
+  async function viewApplicantResume(id) {
+    const preview = window.open("", "_blank");
+    try {
+      const result = await getApplicationResumeUrl(id, token());
+      if (preview) preview.location = result.url;
+      else window.open(result.url, "_blank", "noopener,noreferrer");
+    } catch (requestError) {
+      preview?.close();
+      showFlash(requestError.message);
+    }
   }
 
-  function updateApplicantStage(id, stage) {
-    const next = applicants.map((a) => (a.id === id ? { ...a, stage } : a));
-    save({ applicants: next });
-  }
-
-  function updateApplicantNotes(id, notes) {
-    const next = applicants.map((a) => (a.id === id ? { ...a, notes } : a));
-    save({ applicants: next });
-  }
-
-  function updateCompanyProfile(data) {
-    const next = { ...companyProfile, ...data };
-    save({ companyProfile: next });
-    showFlash("Company profile saved.");
-  }
-
-  const stats = useMemo(() => {
-    const activePostings = jobPostings.filter((p) => p.status === "Active").length;
-    const totalApplicants = applicants.length;
-    const interviewsScheduled = applicants.filter((a) => a.stage === "interview").length;
-    const positionsFilled = applicants.filter((a) => a.stage === "offer").length;
-    return { activePostings, totalApplicants, interviewsScheduled, positionsFilled };
-  }, [jobPostings, applicants]);
-
-  const postingsWithCounts = useMemo(
-    () => withApplicantCounts(jobPostings, applicants),
-    [jobPostings, applicants]
-  );
+  const stats = useMemo(() => ({
+    activePostings: metrics.activeJobs || 0,
+    totalApplicants: metrics.applications || 0,
+    interviewsScheduled: pipeline.interviewing || 0,
+    positionsFilled: pipeline.hired || 0,
+  }), [metrics, pipeline]);
 
   const value = {
-    jobPostings: postingsWithCounts,
+    jobPostings,
     applicants,
     companyProfile,
+    categories,
     stats,
+    loading,
+    error,
     flashMessage,
+    reload,
     createJobPosting,
     updateJobPosting,
     closeJobPosting,
-    deleteJobPosting,
+    deleteJobPosting: null,
     advanceApplicantStage,
-    rejectApplicant,
+    rejectApplicant: (id) => updateApplicantStage(id, "rejected"),
     updateApplicantStage,
-    updateApplicantNotes,
-    updateCompanyProfile,
-    getJobPosting: (id) => postingsWithCounts.find((p) => p.id === id),
-    getApplicantsForJob: (jobId) =>
-      applicants.filter((a) => a.jobId === jobId).sort(
-        (a, b) => new Date(b.appliedDate) - new Date(a.appliedDate)
-      ),
+    updateApplicantNotes: () => {},
+    updateCompanyProfile: () => showFlash("Company profile editing is not available in the current backend API."),
+    viewApplicantResume,
+    getJobPosting: (id) => jobPostings.find((item) => item.id === String(id)),
+    getApplicantsForJob: (jobId) => applicants.filter((item) => item.jobId === String(jobId)).sort((a, b) => new Date(b.appliedDate) - new Date(a.appliedDate)),
   };
 
-  return (
-    <EmployerDataContext.Provider value={value}>{children}</EmployerDataContext.Provider>
-  );
+  return <EmployerDataContext.Provider value={value}>{children}</EmployerDataContext.Provider>;
 }
 
 export function useEmployerData() {

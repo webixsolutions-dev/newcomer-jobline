@@ -8,8 +8,17 @@ import { useAuth } from "./AuthContext";
  *   showing someone a role they don't have.
  */
 export default function ProtectedRoute({ role, children }) {
-  const { isAuthenticated, role: currentRole } = useAuth();
+  const { isAuthenticated, role: currentRole, loading } = useAuth();
   const location = useLocation();
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#eef2f7]" role="status">
+        <div className="h-11 w-11 animate-spin rounded-full border-4 border-[#cbd8e7] border-t-[#0f766e]" />
+        <span className="sr-only">Checking your session</span>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;

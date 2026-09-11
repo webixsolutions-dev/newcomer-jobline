@@ -22,7 +22,7 @@ export default function PostJobDashboardPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const editId = searchParams.get("edit");
-  const { getJobPosting, createJobPosting, updateJobPosting, companyProfile } = useEmployerData();
+  const { getJobPosting, createJobPosting, updateJobPosting, companyProfile, categories } = useEmployerData();
 
   const existing = editId ? getJobPosting(editId) : null;
   const isEditing = Boolean(existing);
@@ -40,20 +40,11 @@ export default function PostJobDashboardPage() {
     };
   }, [existing, companyProfile]);
 
-  function handleSubmit(form, status) {
+  async function handleSubmit(form) {
     if (isEditing) {
-      updateJobPosting(editId, form, status);
+      await updateJobPosting(editId, form);
     } else {
-      createJobPosting(form, status);
-    }
-    navigate("/employer-dashboard/job-postings");
-  }
-
-  function handleSaveDraft(form) {
-    if (isEditing) {
-      updateJobPosting(editId, form, "Draft");
-    } else {
-      createJobPosting(form, "Draft");
+      await createJobPosting(form);
     }
     navigate("/employer-dashboard/job-postings");
   }
@@ -77,7 +68,7 @@ export default function PostJobDashboardPage() {
           dashboardMode
           hideSuccessState
           onSubmit={handleSubmit}
-          onSaveDraft={handleSaveDraft}
+          categories={categories}
         />
       </Card>
     </div>

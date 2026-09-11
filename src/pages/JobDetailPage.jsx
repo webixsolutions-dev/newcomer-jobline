@@ -1,16 +1,18 @@
 // src/pages/JobDetailPage.jsx
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { HiOutlineArrowLeft, HiOutlineMapPin, HiOutlineBriefcase, HiOutlineCurrencyDollar, HiOutlineBookmark, HiBookmark } from "react-icons/hi2";
-import { getPublicJob, getServiceCareCategories, normalizeJob, recordJobView, applyToJob } from "../lib/jobs";
+import { getPublicJob, getServiceCareCategories, normalizeJob, applyToJob } from "../lib/jobs";
 import { useAuth } from "../dashboard/auth/AuthContext";
 import { useSavedJobs } from "../lib/SavedJobsContext";
+import { readSession } from "../lib/auth/session";
 
 /**
  * Dynamic detail page for individual job postings connecting to backend endpoints.
  */
 const JobDetailPage = () => {
   const { jobId } = useParams();
+  const navigate = useNavigate();
   const { isAuthenticated, role } = useAuth();
   const { isSaved, toggleSaved } = useSavedJobs();
   
@@ -28,9 +30,6 @@ const JobDetailPage = () => {
     setLoading(true);
     setError(null);
     setApplyState({ loading: false, message: null, error: null });
-
-    // Record view on mount
-    recordJobView(jobId).catch((err) => console.error("Failed to record view:", err));
 
     Promise.all([
       getPublicJob(jobId),
@@ -71,7 +70,7 @@ const JobDetailPage = () => {
     }
 
     setApplyState({ loading: true, message: null, error: null });
-    const token = localStorage.getItem("newcomer_jobline_token") || "mock-token";
+    const token = readSession()?.access_token;
 
     try {
       await applyToJob(jobId, token, { cover_letter: coverLetter || undefined });
@@ -84,10 +83,22 @@ const JobDetailPage = () => {
 
   const saved = isSaved(jobId);
 
+  async function handleSave() {
+    if (!isAuthenticated || role !== "job_seeker") {
+      navigate("/login", { state: { from: `/jobs/${jobId}` } });
+      return;
+    }
+    try {
+      await toggleSaved(job.id);
+    } catch (saveError) {
+      setApplyState({ loading: false, message: null, error: saveError.message });
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-navy-50 flex items-center justify-center p-4 pt-[72px]">
-        <p className="text-navy-500 font-medium">Loading job details...</p>
+        <div className="h-11 w-11 animate-spin rounded-full border-4 border-navy-200 border-t-teal-700" aria-label="Loading job details" />
       </div>
     );
   }
@@ -146,7 +157,7 @@ const JobDetailPage = () => {
             </div>
 
             <button
-              onClick={() => toggleSaved(job.id)}
+              onClick={handleSave}
               className="inline-flex items-center gap-2 px-4 py-2 border border-navy-200 hover:border-teal-600 rounded-xl text-sm font-semibold transition-all duration-200 hover:text-teal-700 bg-white"
             >
               {saved ? (

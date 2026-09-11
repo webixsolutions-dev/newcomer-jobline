@@ -31,7 +31,7 @@ const CareerJourneyCTA = () => {
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link
-                  to="/browse-jobs"
+                  to="/jobs"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold rounded-full transition-all duration-200 shadow-soft text-sm sm:text-base"
                 >
                   <HiBriefcase className="text-lg" />

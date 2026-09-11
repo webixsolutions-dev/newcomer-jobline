@@ -1,11 +1,13 @@
 /** Employer-facing pipeline stages (recruiter view). */
 export const EMPLOYER_PIPELINE_STAGES = [
-  "new",
-  "reviewed",
+  "submitted",
+  "viewed",
   "shortlisted",
-  "interview",
-  "offer",
+  "interviewing",
+  "offered",
+  "hired",
   "rejected",
+  "withdrawn",
 ];
 
 /** Seeker-facing labels shown in the Job Seeker Dashboard. */
@@ -20,37 +22,43 @@ export const SEEKER_STAGE_LABELS = {
 
 /** Employer-facing labels shown in the Employer Dashboard. */
 export const EMPLOYER_STAGE_LABELS = {
-  new: "New",
-  reviewed: "Reviewed",
+  submitted: "New",
+  viewed: "Reviewed",
   shortlisted: "Shortlisted",
-  interview: "Interview",
-  offer: "Offer",
+  interviewing: "Interview",
+  offered: "Offer",
+  hired: "Hired",
   rejected: "Rejected",
+  withdrawn: "Withdrawn",
 };
 
 /** Map seeker backend enums → employer pipeline stage. */
 export const SEEKER_TO_EMPLOYER_STAGE = {
-  submitted: "new",
-  viewed: "reviewed",
+  submitted: "submitted",
+  viewed: "viewed",
   shortlisted: "shortlisted",
-  interviewing: "interview",
-  offered: "offer",
+  interviewing: "interviewing",
+  offered: "offered",
   rejected: "rejected",
-  hired: "offer",
+  hired: "hired",
+  withdrawn: "withdrawn",
 };
 
 /** Map employer pipeline stage → seeker backend enum (for future API sync). */
 export const EMPLOYER_TO_SEEKER_STAGE = {
-  new: "submitted",
-  reviewed: "viewed",
+  submitted: "submitted",
+  viewed: "viewed",
   shortlisted: "shortlisted",
-  interview: "interviewing",
-  offer: "offered",
+  interviewing: "interviewing",
+  offered: "offered",
+  hired: "hired",
   rejected: "rejected",
+  withdrawn: "withdrawn",
 };
 
 export function getNextEmployerStage(current) {
   const idx = EMPLOYER_PIPELINE_STAGES.indexOf(current);
-  if (idx < 0 || idx >= EMPLOYER_PIPELINE_STAGES.length - 2) return current;
+  const progressionEnd = EMPLOYER_PIPELINE_STAGES.indexOf("hired");
+  if (idx < 0 || idx >= progressionEnd) return current;
   return EMPLOYER_PIPELINE_STAGES[idx + 1];
 }

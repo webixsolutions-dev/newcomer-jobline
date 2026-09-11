@@ -9,10 +9,12 @@ import { useServiceCareJobs } from "./useServiceCareJobs";
 export const useJobFilters = () => {
   const [searchParams] = useSearchParams();
   const categoryFromUrl = searchParams.get("category");
+  const keywordFromUrl = searchParams.get("keyword") || searchParams.get("q") || "";
+  const locationFromUrl = searchParams.get("location") || "";
 
   const [filters, setFilters] = useState({
-    keyword: "",
-    location: "",
+    keyword: keywordFromUrl,
+    location: locationFromUrl,
     category: categoryFromUrl || "All categories",
     employmentType: "All types",
     employmentTypesList: [], // For the sidebar checkboxes

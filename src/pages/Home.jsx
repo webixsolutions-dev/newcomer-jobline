@@ -5,7 +5,6 @@ import HowItWorksSection from "../components/home/HowItWorksSection";
 import TrustedStatsStrip from "../components/home/TrustedStatsStrip";
 import CareerResources from "../components/home/CareerResources";
 import ForEmployersSection from "../components/home/ForEmployersSection";
-import SuccessStories from "../components/home/SuccessStories";
 import CareerJourneyCTA from "../components/home/CareerJourneyCTA";
 import FAQSection from "../components/home/FAQSection";
 
@@ -29,9 +28,6 @@ const Home = () => {
 
       {/* 4.7 For Employers */}
       <ForEmployersSection />
-
-      {/* 4.8 Success Stories */}
-      <SuccessStories />
 
       {/* 4.9 Start Your Career Journey CTA */}
       <CareerJourneyCTA />

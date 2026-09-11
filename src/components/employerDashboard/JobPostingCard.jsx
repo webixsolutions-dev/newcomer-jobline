@@ -105,14 +105,16 @@ export default function JobPostingCard({
                       <FiXCircle size={14} /> Close Posting
                     </button>
                   )}
-                  <button
-                    type="button"
-                    onClick={() => { setMenuOpen(false); setConfirmDelete(true); }}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-[var(--color-bg)]"
-                    style={{ color: "var(--status-rejected-text)" }}
-                  >
-                    <FiTrash2 size={14} /> Delete
-                  </button>
+                  {onDelete && (
+                    <button
+                      type="button"
+                      onClick={() => { setMenuOpen(false); setConfirmDelete(true); }}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-[var(--color-bg)]"
+                      style={{ color: "var(--status-rejected-text)" }}
+                    >
+                      <FiTrash2 size={14} /> Delete
+                    </button>
+                  )}
                 </div>
               </>
             )}
@@ -129,15 +131,17 @@ export default function JobPostingCard({
         onCancel={() => setConfirmClose(false)}
       />
 
-      <ConfirmDialog
-        open={confirmDelete}
-        title="Delete this posting?"
-        description="This will permanently remove the job posting and cannot be undone."
-        confirmLabel="Delete"
-        danger
-        onConfirm={() => { onDelete(posting.id); setConfirmDelete(false); }}
-        onCancel={() => setConfirmDelete(false)}
-      />
+      {onDelete && (
+        <ConfirmDialog
+          open={confirmDelete}
+          title="Delete this posting?"
+          description="This will permanently remove the job posting and cannot be undone."
+          confirmLabel="Delete"
+          danger
+          onConfirm={() => { onDelete(posting.id); setConfirmDelete(false); }}
+          onCancel={() => setConfirmDelete(false)}
+        />
+      )}
     </>
   );
 }

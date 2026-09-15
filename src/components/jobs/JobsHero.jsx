@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
  */
 const JobsHero = () => {
   return (
-    <section className="relative bg-gold-50 overflow-hidden pt-20 pb-16 w-full min-h-[520px] flex items-center">
+    <section className="hero-page-section bg-gold-50">
       {/* ── Background Hero Image (Desktop only) ── */}
       <div className="absolute inset-0 w-full h-full hidden lg:block">
         <img
@@ -30,7 +30,7 @@ const JobsHero = () => {
             initial={{ opacity: 0, x: -32 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-            className="flex flex-col justify-center py-16 lg:py-20 col-span-1 lg:col-span-5 pr-4 lg:pr-8"
+            className="hero-page-content"
           >
             <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold leading-[1.1] text-navy-900 font-heading">
               Browse
@@ -55,6 +55,24 @@ const JobsHero = () => {
 
           {/* Right column spacer on desktop */}
           <div className="hidden lg:block lg:col-span-7" />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="w-full aspect-[16/9] lg:hidden block col-span-1"
+          >
+            <div className="w-full h-full overflow-hidden rounded-2xl">
+              <img
+                src="/browsejob/hero.webp"
+                alt="4 professionals standing in front of Toronto skyline"
+                className="w-full h-full object-cover object-center"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }}
+              />
+            </div>
+          </motion.div>
 
         </div>
       </div>

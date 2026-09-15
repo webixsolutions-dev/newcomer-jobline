@@ -1,77 +1,77 @@
-import { Link } from 'react-router-dom';
+// src/components/resources/FeaturedResources.jsx
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { HiArrowRight } from "react-icons/hi2";
 
-const featuredArticles = [
-  {
-    title: "How to Write a Canadian Resume",
-    desc: "Learn the format, key sections, and tips to create a resume that stands out to Canadian employers.",
-    img: "/resources/featured_canadian_resume.webp",
-    link: "#"
-  },
-  {
-    title: "Interview Tips for Newcomers",
-    desc: "Prepare with confidence. Get practical tips for different types of interviews and common questions.",
-    img: "/resources/featured_interview_tips.webp",
-    link: "#"
-  },
-  {
-    title: "Living in Canada: What You Need to Know",
-    desc: "Find essential information on housing, banking, transportation, and everyday life in Canada.",
-    img: "/resources/featured_living_in_canada.webp",
-    link: "#"
-  },
-  {
-    title: "Free Training & Certification Programs",
-    desc: "Explore free or low-cost training programs to build new skills and boost your career.",
-    img: "/resources/featured_training_certification_programs.webp",
-    link: "#"
-  }
-];
-
-const FeaturedResources = () => {
+const FeaturedResources = ({ resources }) => {
   return (
-    <section className="mb-16">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <h2 className="text-3xl font-extrabold text-navy-900 font-heading">
-          Featured Resources
-        </h2>
-        <Link to="#" className="text-teal-700 font-bold hover:text-teal-800 flex items-center transition-colors">
-          View all resources <span className="ml-2">→</span>
-        </Link>
-      </div>
-
-      <div className="flex flex-col gap-6">
-        {featuredArticles.map((article, index) => (
-          <div 
-            key={index}
-            className="flex flex-col md:flex-row bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 md:items-center md:pr-8"
-          >
-            <div className="w-full md:w-72 h-48 md:h-auto bg-gray-50 flex-shrink-0">
-              <img 
-                src={article.img} 
-                alt={article.title} 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            
-            <div className="p-6 flex-grow">
-              <h3 className="text-xl font-bold text-navy-900 mb-2">
-                {article.title}
-              </h3>
-              <p className="text-navy-500">
-                {article.desc}
-              </p>
-            </div>
-
-            <div className="px-6 pb-6 md:p-0 flex-shrink-0">
-              <Link 
-                to={article.link}
-                className="inline-flex items-center px-6 py-2 border border-gray-300 text-navy-900 font-semibold rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap"
-              >
-                Read More <span className="ml-2">→</span>
-              </Link>
-            </div>
+    <section
+      id="featured-resources"
+      className="py-16 sm:py-20 bg-white scroll-mt-24"
+    >
+      <div className="container-app">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+          <div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-900 font-heading">
+              Featured <span className="text-teal-700">Resources</span>
+            </h2>
+            <div className="w-10 h-1 bg-gold-500 rounded-full mt-3" />
           </div>
-        ))}
+          <a
+            href="#featured-resources"
+            className="flex items-center gap-1.5 text-teal-700 font-semibold hover:text-teal-800 transition-colors text-sm shrink-0"
+          >
+            View all resources <HiArrowRight className="text-base" />
+          </a>
+        </div>
+
+        {resources.length === 0 ? (
+          <p className="text-navy-500 text-center py-12">
+            No featured resources match your search. Try a different keyword.
+          </p>
+        ) : (
+          <div className="flex flex-col border border-navy-100 rounded-2xl overflow-hidden bg-white shadow-sm">
+            {resources.map((item, i) => (
+              <motion.div
+                key={item.id}
+                id={item.id}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.35, delay: i * 0.05 }}
+                className={`flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-8 p-6 sm:px-8 scroll-mt-28 ${
+                  i > 0 ? "border-t border-navy-100" : ""
+                }`}
+              >
+                <div
+                  className="shrink-0 w-full sm:w-[220px] md:w-[240px] aspect-[3/2] rounded-lg overflow-hidden border border-navy-100 bg-[#eef2f7]"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover object-center"
+                  />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-navy-900 text-base sm:text-lg">
+                    {item.title}
+                  </h3>
+                  <p className="text-navy-500 text-sm mt-1.5 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+
+                <Link
+                  to={item.link}
+                  className="shrink-0 inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-lg border border-navy-200 text-teal-700 font-semibold text-sm hover:bg-teal-50 hover:border-teal-300 transition-colors whitespace-nowrap w-full sm:w-auto"
+                >
+                  Read More <HiArrowRight className="text-base" />
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

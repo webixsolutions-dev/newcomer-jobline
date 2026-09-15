@@ -17,7 +17,7 @@ export default function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen" style={{ background: "var(--color-bg)" }}>
+    <div className="flex min-h-screen min-w-0 overflow-x-hidden" style={{ background: "var(--color-bg)" }}>
       <Sidebar
         role={role}
         variant={sidebarVariant}

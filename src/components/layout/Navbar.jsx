@@ -40,9 +40,9 @@ const Navbar = () => {
         scrolled ? "shadow-card" : "border-b border-navy-100"
       }`}
     >
-      <div className="container-app flex items-center justify-between h-[72px]">
+      <div className="container-app grid h-[72px] grid-cols-[1fr_auto_1fr] items-center gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 shrink-0">
+        <Link to="/" className="flex items-center gap-2.5 shrink-0 justify-self-start">
           <img
             src="/logo.png"
             alt="Newcomer Jobline"
@@ -50,8 +50,8 @@ const Navbar = () => {
           />
         </Link>
 
-        {/* Desktop nav links */}
-        <nav className="hidden lg:flex items-center gap-0">
+        {/* Desktop nav links — centered in header */}
+        <nav className="hidden lg:flex items-center justify-center gap-0 justify-self-center">
           {LINKS.map((link) => (
             <NavLink
               key={link.to}
@@ -81,23 +81,14 @@ const Navbar = () => {
         </nav>
 
         {/* Desktop CTA buttons */}
-        <div className="hidden lg:flex items-center gap-3">
-          {/* Post a Job — active-state driven by useLocation, same underline pattern as NavLinks */}
-          <div className="relative">
-            <Link
-              to="/post-job"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold rounded-full text-sm transition-all duration-200 shadow-soft"
-            >
-              <HiBriefcase className="text-base" />
-              Post a Job
-            </Link>
-            {isPostJobActive && (
-              <motion.span
-                layoutId="nav-underline"
-                className="absolute left-0 right-0 -bottom-[1px] h-[3px] rounded-full bg-gold-500"
-              />
-            )}
-          </div>
+        <div className="hidden lg:flex items-center gap-3 justify-self-end">
+          <Link
+            to="/post-job"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold rounded-full text-sm transition-all duration-200 shadow-soft"
+          >
+            <HiBriefcase className="text-base" />
+            Post a Job
+          </Link>
 
           {/* Sign In / Dashboard / Sign Out */}
           {isAuthenticated ? (
@@ -141,7 +132,7 @@ const Navbar = () => {
         <button
           onClick={() => setOpen(true)}
           aria-label="Open menu"
-          className="lg:hidden flex items-center justify-center h-10 w-10 rounded-full bg-navy-50 text-navy-700"
+          className="lg:hidden flex items-center justify-center h-10 w-10 rounded-full bg-navy-50 text-navy-700 justify-self-end col-start-3"
         >
           <HiBars3 className="text-2xl" />
         </button>

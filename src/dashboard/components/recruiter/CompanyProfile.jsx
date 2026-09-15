@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { Card, Button, Field, inputClass, inputStyle } from "../ui/Primitives";
 import Badge from "../ui/Badge";
 import DeleteAccountSection from "../shared/DeleteAccountSection";
 
 export default function CompanyProfile() {
-  const { company } = useOutletContext();
+  const { company, onCompanyUpdate } = useOutletContext();
   const [form, setForm] = useState(company);
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    setForm(company);
+    setSaved(false);
+  }, [company]);
 
   function update(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -33,7 +38,14 @@ export default function CompanyProfile() {
         </Card>
       )}
 
-      <form onSubmit={(e) => { e.preventDefault(); setSaved(true); }} className="space-y-6">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onCompanyUpdate?.(form);
+          setSaved(true);
+        }}
+        className="space-y-6"
+      >
         <Card className="space-y-5 p-6">
           <Field label="Company name" required>
             <input value={form.name} onChange={(e) => update("name", e.target.value)} className={inputClass} style={inputStyle} />

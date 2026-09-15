@@ -97,15 +97,15 @@ const JobDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-navy-50 flex items-center justify-center p-4 pt-[72px]">
-        <div className="h-11 w-11 animate-spin rounded-full border-4 border-navy-200 border-t-teal-700" aria-label="Loading job details" />
+      <div className="min-h-screen bg-navy-50 flex items-center justify-center p-4 pt-20">
+        <p className="text-navy-500 font-medium">Loading job details...</p>
       </div>
     );
   }
 
   if (error || !job) {
     return (
-      <div className="min-h-screen bg-navy-50 flex flex-col items-center justify-center p-4 pt-[72px]">
+      <div className="min-h-screen bg-navy-50 flex flex-col items-center justify-center p-4 pt-20">
         <div className="bg-white p-8 rounded-2xl shadow-card text-center max-w-lg w-full border border-navy-100">
           <p className="text-red-500 font-semibold mb-4">{error || "Job not found"}</p>
           <Link

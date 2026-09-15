@@ -237,14 +237,14 @@ const ApplyNow = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="relative bg-gradient-to-r from-navy-900 via-navy-800 to-navy-950 py-20 overflow-hidden"
+        className="relative bg-gradient-to-r from-navy-900 via-navy-800 to-navy-950 hero-page-section min-h-[400px] overflow-hidden"
       >
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-400 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-yellow-500 rounded-full blur-3xl"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-300 rounded-full blur-3xl"></div>
         </div>
-        <div className="relative container-app text-center text-white">
+        <div className="relative container-app text-center text-white hero-page-inner">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}

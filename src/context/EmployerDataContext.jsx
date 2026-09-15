@@ -226,16 +226,15 @@ export function EmployerDataProvider({ children }) {
     if (applicant && next !== applicant.stage) updateApplicantStage(id, next);
   }
 
-  async function viewApplicantResume(id) {
-    const preview = window.open("", "_blank");
-    try {
-      const result = await getApplicationResumeUrl(id, token());
-      if (preview) preview.location = result.url;
-      else window.open(result.url, "_blank", "noopener,noreferrer");
-    } catch (requestError) {
-      preview?.close();
-      showFlash(requestError.message);
-    }
+  function updateCompanyProfile(data) {
+    const next = { ...companyProfile, ...data };
+    const nextPostings = jobPostings.map((p) => ({
+      ...p,
+      companyName: next.name,
+      location: next.location ?? p.location,
+    }));
+    save({ companyProfile: next, jobPostings: nextPostings });
+    showFlash("Company profile saved.");
   }
 
   const stats = useMemo(() => ({

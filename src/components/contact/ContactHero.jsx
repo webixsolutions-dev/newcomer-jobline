@@ -13,7 +13,7 @@ const ContactHero = ({ formRef }) => {
   };
 
   return (
-    <section className="relative bg-gold-50 overflow-hidden pt-20 pb-16 w-full min-h-[520px] flex items-center">
+    <section className="hero-page-section bg-gold-50">
       {/* ── Background Hero Image (Desktop only) ── */}
       <div className="absolute inset-0 w-full h-full hidden lg:block">
         <img
@@ -35,7 +35,7 @@ const ContactHero = ({ formRef }) => {
             initial={{ opacity: 0, x: -32 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-            className="flex flex-col justify-center gap-4 py-16 lg:py-20 col-span-1 lg:col-span-5 pr-4 lg:pr-8 max-w-[420px]"
+            className="hero-page-content gap-4 max-w-full lg:max-w-[420px]"
           >
             <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.2] text-navy-900 font-heading">
               We're Here to Support Your Career Journey in Canada

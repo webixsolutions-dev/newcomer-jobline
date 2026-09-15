@@ -61,7 +61,7 @@ const EmployerFAQCard = ({ faq, isOpen, onToggle }) => {
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
-            <p className="px-5 pb-5 text-sm sm:text-base text-navy-500 leading-relaxed pl-[72px]">
+            <p className="px-5 pb-5 text-sm sm:text-base text-navy-500 leading-relaxed sm:pl-[72px]">
               {faq.answer}
             </p>
           </motion.div>

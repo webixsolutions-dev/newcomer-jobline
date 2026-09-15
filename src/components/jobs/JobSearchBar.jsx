@@ -2,6 +2,13 @@
 import { useState } from "react";
 import { HiOutlineMagnifyingGlass, HiOutlineMapPin, HiOutlineBriefcase } from "react-icons/hi2";
 import { FaLayerGroup } from "react-icons/fa6";
+import {
+  HERO_JOB_SEARCH_BUTTON,
+  HERO_JOB_SEARCH_BUTTON_WRAP,
+  HERO_JOB_SEARCH_FIELD,
+  HERO_JOB_SEARCH_FIELD_NARROW,
+  HERO_JOB_SEARCH_SHELL,
+} from "./heroJobSearchClasses";
 
 const JOB_CATEGORIES = [
   "All categories",
@@ -43,14 +50,15 @@ const JobSearchBar = ({ updateFilters, listRef }) => {
   };
 
   return (
-    <div className="relative z-20 -mt-10 lg:-mt-16 mx-4 sm:mx-6 lg:mx-auto max-w-7xl">
-      <div className="bg-white rounded-2xl sm:rounded-full shadow-card border border-navy-100 p-2 sm:p-3">
+    <div className="relative z-20 w-full -mt-6 sm:-mt-10 pb-2">
+      <div className="container-app">
+        <div className={HERO_JOB_SEARCH_SHELL}>
         <div className="flex flex-col sm:flex-row flex-wrap lg:flex-nowrap items-center divide-y sm:divide-y-0 sm:divide-x divide-navy-100">
           
           {/* Keyword */}
-          <div className="flex items-center gap-3 w-full lg:w-1/4 px-4 py-3 sm:py-2">
+          <div className={HERO_JOB_SEARCH_FIELD}>
             <HiOutlineMagnifyingGlass className="text-navy-400 text-xl shrink-0" />
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full min-w-0">
               <label className="text-[10px] font-bold text-navy-900 uppercase tracking-wider hidden sm:block">
                 Keyword
               </label>
@@ -65,9 +73,9 @@ const JobSearchBar = ({ updateFilters, listRef }) => {
           </div>
 
           {/* Location */}
-          <div className="flex items-center gap-3 w-full lg:w-1/4 px-4 py-3 sm:py-2">
+          <div className={HERO_JOB_SEARCH_FIELD}>
             <HiOutlineMapPin className="text-navy-400 text-xl shrink-0" />
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full min-w-0">
               <label className="text-[10px] font-bold text-navy-900 uppercase tracking-wider hidden sm:block">
                 Location
               </label>
@@ -82,9 +90,9 @@ const JobSearchBar = ({ updateFilters, listRef }) => {
           </div>
 
           {/* Category */}
-          <div className="flex items-center gap-3 w-full sm:w-1/2 lg:w-1/5 px-4 py-3 sm:py-2">
+          <div className={HERO_JOB_SEARCH_FIELD_NARROW}>
             <FaLayerGroup className="text-navy-400 text-lg shrink-0" />
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full min-w-0">
               <label className="text-[10px] font-bold text-navy-900 uppercase tracking-wider hidden sm:block">
                 Category
               </label>
@@ -103,9 +111,9 @@ const JobSearchBar = ({ updateFilters, listRef }) => {
           </div>
 
           {/* Employment Type */}
-          <div className="flex items-center gap-3 w-full sm:w-1/2 lg:w-1/5 px-4 py-3 sm:py-2">
+          <div className={HERO_JOB_SEARCH_FIELD_NARROW}>
             <HiOutlineBriefcase className="text-navy-400 text-lg shrink-0" />
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full min-w-0">
               <label className="text-[10px] font-bold text-navy-900 uppercase tracking-wider hidden sm:block">
                 Employment Type
               </label>
@@ -124,15 +132,17 @@ const JobSearchBar = ({ updateFilters, listRef }) => {
           </div>
 
           {/* Button */}
-          <div className="w-full lg:w-auto px-2 py-2 sm:py-0">
+          <div className={HERO_JOB_SEARCH_BUTTON_WRAP}>
             <button
+              type="button"
               onClick={handleSearch}
-              className="w-full lg:w-auto flex items-center justify-center gap-2 bg-navy-900 hover:bg-navy-800 text-white font-bold py-3.5 sm:py-3 px-8 rounded-xl sm:rounded-full transition-colors whitespace-nowrap"
+              className={HERO_JOB_SEARCH_BUTTON}
             >
               <HiOutlineMagnifyingGlass className="text-lg" />
               Search Jobs
             </button>
           </div>
+        </div>
         </div>
       </div>
     </div>

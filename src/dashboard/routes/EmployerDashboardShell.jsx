@@ -31,7 +31,7 @@ function EmployerDashboardLayout() {
   }
 
   return (
-    <div className="dashboard-shell">
+    <div className="dashboard-shell min-w-0 overflow-x-hidden">
       <DashboardLayout
         role="recruiter"
         sidebarVariant="employer"

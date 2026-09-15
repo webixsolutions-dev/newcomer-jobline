@@ -144,7 +144,12 @@ export function EmployerDataProvider({ children }) {
 
   function updateCompanyProfile(data) {
     const next = { ...companyProfile, ...data };
-    save({ companyProfile: next });
+    const nextPostings = jobPostings.map((p) => ({
+      ...p,
+      companyName: next.name,
+      location: next.location ?? p.location,
+    }));
+    save({ companyProfile: next, jobPostings: nextPostings });
     showFlash("Company profile saved.");
   }
 

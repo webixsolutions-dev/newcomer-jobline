@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiUpload, FiFile, FiTrash2 } from "react-icons/fi";
 import { Card, Button, Field, inputClass, inputStyle } from "../../dashboard/components/ui/Primitives";
 
@@ -21,6 +21,11 @@ export default function CompanyProfileForm({ profile, onSave }) {
   const [form, setForm] = useState(profile);
   const [saved, setSaved] = useState(false);
   const fileRef = useRef(null);
+
+  useEffect(() => {
+    setForm(profile);
+    setSaved(false);
+  }, [profile]);
 
   function update(field, value) {
     setForm((p) => ({ ...p, [field]: value }));
@@ -115,16 +120,16 @@ export default function CompanyProfileForm({ profile, onSave }) {
         <Field label="Company Logo">
           {form.logoFilename ? (
             <div
-              className="flex items-center justify-between rounded-[var(--radius-md)] border p-4"
+              className="flex flex-col gap-3 rounded-[var(--radius-md)] border p-4 sm:flex-row sm:items-center sm:justify-between"
               style={{ borderColor: "var(--color-border)" }}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex min-w-0 items-center gap-3">
                 <FiFile size={20} style={{ color: "var(--color-secondary)" }} />
-                <p className="text-sm font-semibold" style={{ color: "var(--color-primary)" }}>
+                <p className="truncate text-sm font-semibold" style={{ color: "var(--color-primary)" }}>
                   {form.logoFilename}
                 </p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex shrink-0 gap-2">
                 <Button type="button" variant="outline" onClick={() => fileRef.current?.click()}>
                   Replace
                 </Button>

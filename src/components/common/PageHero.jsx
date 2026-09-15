@@ -21,7 +21,7 @@ const PageHero = ({ eyebrow, title, highlight, subtitle, crumb, children }) => {
   }
 
   return (
-    <section className="relative overflow-hidden pt-[var(--hero-top-offset)] pb-[var(--space-section-y)] min-h-[400px] flex items-center">
+    <section className="hero-page-section min-h-[400px]">
       {/* Background Image with Overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -67,7 +67,7 @@ const PageHero = ({ eyebrow, title, highlight, subtitle, crumb, children }) => {
         aria-hidden
       />
 
-      <Container className="relative flex flex-col items-start text-left gap-5">
+      <Container className="relative flex flex-col items-start text-left gap-5 hero-page-inner">
         {/* Breadcrumb - Left Aligned */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}

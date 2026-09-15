@@ -10,7 +10,7 @@ import DecorativeShape from "../common/DecorativeShape";
  */
 const BuiltForEmployersSection = () => {
   return (
-    <section className="relative py-16 sm:py-24 bg-white overflow-hidden min-h-[580px] flex items-center">
+    <section className="relative py-12 sm:py-16 lg:py-24 bg-white overflow-hidden min-h-0 lg:min-h-[580px] flex items-center">
       {/* Decorative accent shape */}
       <DecorativeShape
         position="bottom-left"
@@ -25,11 +25,11 @@ const BuiltForEmployersSection = () => {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="absolute inset-y-0 right-0 w-full lg:w-[65%] hidden lg:block overflow-hidden py-10"
+        className="absolute inset-y-0 right-0 w-full lg:w-[58%] hidden lg:block overflow-hidden py-10 pointer-events-none"
         aria-hidden="true"
       >
         <div 
-          className="w-full h-full overflow-hidden"
+          className="relative w-full h-full overflow-hidden"
           style={{
             borderTopLeftRadius: '50%',
             borderBottomLeftRadius: '20%',
@@ -42,6 +42,10 @@ const BuiltForEmployersSection = () => {
             alt="Diverse team meeting and collaborating"
             className="w-full h-full object-cover object-right"
           />
+          <div
+            className="absolute inset-y-0 left-0 w-[28%] bg-gradient-to-r from-white via-white/80 to-transparent z-10"
+            aria-hidden="true"
+          />
         </div>
       </motion.div>
 
@@ -49,8 +53,8 @@ const BuiltForEmployersSection = () => {
       <div className="container-app w-full relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
-          {/* ── Left: Content & Stacked Cards ── */}
-          <div className="flex flex-col gap-8 col-span-1 lg:col-span-6 pr-4 lg:pr-12">
+          {/* ── Left: Content & Stacked Cards (narrow column so cards don't cover the hero image) ── */}
+          <div className="flex flex-col gap-8 col-span-1 lg:col-span-5 w-full lg:max-w-[480px] lg:pr-4">
             <motion.div
               initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -96,8 +100,8 @@ const BuiltForEmployersSection = () => {
             </div>
           </div>
 
-          {/* Spacer Column on Desktop */}
-          <div className="col-span-1 lg:col-span-6 hidden lg:block" />
+          {/* Spacer Column on Desktop — reserves space for the background image */}
+          <div className="col-span-1 lg:col-span-7 hidden lg:block" aria-hidden="true" />
 
           {/* ── Mobile-only Image ── */}
           <motion.div

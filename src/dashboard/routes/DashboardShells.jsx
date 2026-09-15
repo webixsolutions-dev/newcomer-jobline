@@ -70,6 +70,11 @@ export function RecruiterDashboardShell() {
     setCompany(newCompany);
   }
 
+  function handleCompanyUpdate(updated) {
+    localStorage.setItem(COMPANY_STORAGE_KEY, JSON.stringify(updated));
+    setCompany(updated);
+  }
+
   if (!company) {
     return (
       <div className="dashboard-shell flex min-h-screen items-center justify-center p-4" style={{ background: "var(--color-bg)" }}>
@@ -85,10 +90,11 @@ export function RecruiterDashboardShell() {
       <DashboardLayout
         role="recruiter"
         userName={profile?.full_name || "Recruiter"}
+        companyName={company.name}
         unreadCount={unreadCount}
         onLogout={handleLogout}
         banner={<VerificationBanner company={company} />}
-        outletContext={{ company }}
+        outletContext={{ company, onCompanyUpdate: handleCompanyUpdate }}
       />
     </div>
   );

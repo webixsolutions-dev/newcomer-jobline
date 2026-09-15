@@ -1,30 +1,60 @@
 // src/pages/Resources.jsx
-// Placeholder page — will be built in a future module
-import { Link } from "react-router-dom";
-import { HiOutlineBookOpen } from "react-icons/hi";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
+import ResourcesHero from "../components/resources/ResourcesHero";
+import PopularResourceCategories from "../components/resources/PopularResourceCategories";
+import FeaturedResources from "../components/resources/FeaturedResources";
+import ResourcesHelpCTA from "../components/resources/ResourcesHelpCTA";
+import {
+  FEATURED_RESOURCES,
+  RESOURCE_CATEGORIES,
+} from "../data/resourcesPageData";
+
+const matchesQuery = (query, ...fields) => {
+  if (!query) return true;
+  const normalized = query.toLowerCase();
+  return fields.some((field) => field.toLowerCase().includes(normalized));
+};
 
 const Resources = () => {
+  const { hash } = useLocation();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    if (!hash) return;
+    const id = hash.replace("#", "");
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [hash]);
+
+  const filteredCategories = useMemo(
+    () =>
+      RESOURCE_CATEGORIES.filter((cat) =>
+        matchesQuery(searchQuery, cat.title, cat.description)
+      ),
+    [searchQuery]
+  );
+
+  const filteredFeatured = useMemo(
+    () =>
+      FEATURED_RESOURCES.filter((item) =>
+        matchesQuery(searchQuery, item.title, item.description)
+      ),
+    [searchQuery]
+  );
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white pt-[72px] px-4">
-      <div className="text-center max-w-md">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50 mx-auto mb-6">
-          <HiOutlineBookOpen className="text-3xl text-teal-700" />
-        </div>
-        <h1 className="text-3xl font-extrabold text-navy-900 font-heading mb-3">
-          Career Resources
-        </h1>
-        <p className="text-navy-500 mb-8">
-          Resume tips, interview prep, settlement support, and more — coming
-          soon in the next module.
-        </p>
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold rounded-full text-sm transition-all duration-200"
-        >
-          Back to Home
-        </Link>
-      </div>
-    </div>
+    <>
+      <ResourcesHero
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
+      <PopularResourceCategories categories={filteredCategories} />
+      <FeaturedResources resources={filteredFeatured} />
+      <ResourcesHelpCTA />
+    </>
   );
 };
 

@@ -104,7 +104,7 @@ export function AuthProvider({ children }) {
   async function signUp(fullName, email, password, targetRole) {
     setError(null);
     try {
-      return await api("/v1/auth/register", {
+      const data = await api("/v1/auth/register", {
         method: "POST",
         body: JSON.stringify({
           full_name: fullName,
@@ -113,6 +113,13 @@ export function AuthProvider({ children }) {
           role: targetRole,
         }),
       });
+      if (data?.session) {
+        saveSession(data.session);
+        setRole(data.user?.role || targetRole);
+        setProfile(data.user || null);
+        localStorage.removeItem("newcomer_jobline_dashboard_role");
+      }
+      return data;
     } catch (err) {
       setError(err.message || "Failed to sign up");
       throw err;

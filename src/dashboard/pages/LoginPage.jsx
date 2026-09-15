@@ -10,7 +10,11 @@ export default function LoginPage() {
   const location = useLocation();
   const returnTo = location.state?.from;
 
-  const [role, setRole] = useState("seeker");
+  const initialUiRole =
+    location.state?.role === "employer" || location.state?.role === "recruiter"
+      ? "employer"
+      : "seeker";
+  const [role, setRole] = useState(initialUiRole);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -205,7 +209,11 @@ export default function LoginPage() {
           {/* Sign up */}
           <p className="text-center text-sm text-[#4f739f] mt-6">
             Don't have an account?{" "}
-            <Link to="/signup" className="font-bold text-[#F5A623] hover:text-[#dc8113] transition-colors">
+            <Link
+              to="/signup"
+              state={{ role, from: returnTo }}
+              className="font-bold text-[#F5A623] hover:text-[#dc8113] transition-colors"
+            >
               Sign up
             </Link>
           </p>

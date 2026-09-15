@@ -89,7 +89,7 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="relative bg-white overflow-hidden w-full max-w-[100vw]">
+    <div className="relative bg-white overflow-hidden w-full">
       {/* ── Hero: white copy column + photo (matches homepage mock) ── */}
       <section className="relative overflow-hidden bg-white pt-[72px] w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[520px] items-stretch">
@@ -97,7 +97,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, x: -32 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-            className="flex flex-col justify-center gap-5 px-6 sm:px-12 md:px-16 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+6rem))] lg:pr-12 xl:pr-16 py-10 sm:py-14 lg:py-16 max-w-xl w-full bg-white z-10"
+            className="hero-copy-padding flex flex-col justify-center gap-5 py-10 sm:py-14 lg:py-16 max-w-xl w-full min-w-0 bg-white z-10"
           >
             <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold leading-[1.1] text-navy-900 font-heading">
               Helping Newcomers Find

@@ -5,12 +5,21 @@
 html {
   scroll-behavior: smooth;
   overflow-x: clip;
+  /* Reserve scrollbar space so layout width matches across Chrome, Edge, Firefox */
+  scrollbar-gutter: stable;
 }
 
 body {
   @apply font-body text-navy-900 bg-white antialiased;
   overflow-x: hidden;
   min-width: 0;
+  width: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -45,6 +54,20 @@ h1, h2, h3, h4, h5, h6 {
 
   .container-app {
     @apply max-w-7xl mx-auto page-gutters;
+  }
+
+  /*
+   * Split-hero left column: aligns with .container-app without 100vw.
+   * 100vw includes the scrollbar in Chrome and causes horizontal shift/overflow.
+   */
+  .hero-copy-padding {
+    @apply px-6 sm:px-12 md:px-16 lg:pr-12 xl:pr-16;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-copy-padding {
+      padding-left: max(1.5rem, calc(50% - 40rem + 6rem));
+    }
   }
 
   /* Hero layout — matches Browse Jobs (nav clearance + heading spacing) */

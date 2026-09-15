@@ -10,31 +10,37 @@ const ResourcesHero = ({ searchQuery, onSearchChange }) => {
   };
 
   return (
-    <section className="hero-page-section bg-gradient-to-br from-slate-50 via-[#eef4f8] to-white">
-      <div className="container-app w-full relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+    <div className="relative bg-[#f5f7fa] overflow-hidden w-full">
+      <section className="relative overflow-hidden pt-[72px] w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[520px] items-stretch">
           <motion.div
-            initial={{ opacity: 0, x: -24 }}
+            initial={{ opacity: 0, x: -32 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="hero-page-content lg:max-w-none"
+            transition={{ duration: 0.7 }}
+            className="hero-copy-padding flex flex-col justify-center gap-5 py-10 sm:py-14 lg:py-16 max-w-xl w-full min-w-0 bg-[#f5f7fa] z-10"
           >
-            <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.15] text-navy-900 font-heading">
+            <span className="text-gold-600 font-bold uppercase tracking-widest text-xs sm:text-sm">
+              Resources
+            </span>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold leading-[1.1] text-navy-900 font-heading">
               Helpful Resources{" "}
               <span className="text-teal-700">for Newcomers</span>
             </h1>
 
-            <p className="text-navy-500 text-sm sm:text-base leading-relaxed mt-4 max-w-lg">
+            <div className="w-10 h-1 bg-gold-500 rounded-full" />
+
+            <p className="text-navy-500 text-base sm:text-lg leading-relaxed max-w-md">
               Find helpful articles, tools, and guides designed to support your
               career journey in Canada — from job search and interviews to
               settlement and well-being.
             </p>
-            <p className="text-navy-500 text-sm sm:text-base leading-relaxed mt-3 max-w-lg">
+            <p className="text-navy-500 text-sm sm:text-base leading-relaxed max-w-md -mt-2">
               Browse categories below or search to discover resources tailored
               for newcomers like you.
             </p>
 
-            <form onSubmit={handleSubmit} className="mt-6 max-w-md w-full">
+            <form onSubmit={handleSubmit} className="mt-2 max-w-md w-full">
               <label htmlFor="resources-search" className="sr-only">
                 Search resources
               </label>
@@ -58,22 +64,20 @@ const ResourcesHero = ({ searchQuery, onSearchChange }) => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="col-span-1 lg:col-span-7 w-full"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-0 h-full"
           >
-            <div className="w-full aspect-[4/3] lg:aspect-auto lg:min-h-[340px] rounded-2xl overflow-hidden shadow-card">
-              <img
-                src="/resources/hero_resources_hijab_woman.webp"
-                alt="Newcomer professional working on a laptop"
-                className="w-full h-full object-cover object-center"
-              />
-            </div>
+            <img
+              src="/resources/hero_resources_hijab_woman.webp"
+              alt="Newcomer professional working on a laptop"
+              className="absolute inset-0 w-full h-full object-cover object-center lg:object-right"
+            />
           </motion.div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
 

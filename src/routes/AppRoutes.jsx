@@ -17,8 +17,9 @@ const ContactUs = lazy(() => import("../pages/ContactUs"));
 const ApplyNow = lazy(() => import("../pages/ApplyNow"));
 const Resources = lazy(() => import("../pages/Resources"));
 
-// Auth Page
+// Auth Pages
 const LoginPage = lazy(() => import("../dashboard/pages/LoginPage"));
+const SignUpPage = lazy(() => import("../dashboard/pages/SignUpPage"));
 
 // Job Seeker Dashboard pages
 const SeekerDashboardHome = lazy(() => import("../dashboard/components/seeker/DashboardHome"));
@@ -64,9 +65,11 @@ const AppRoutes = () => {
           <Route path="resources" element={<Resources />} />
         </Route>
 
-        {/* Dashboard sign-in */}
+        {/* Dashboard auth */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
         <Route path="/sign-in" element={<Navigate to="/login" replace />} />
+        <Route path="/sign-up" element={<Navigate to="/signup" replace />} />
 
         {/* Job Seeker Dashboard */}
         <Route

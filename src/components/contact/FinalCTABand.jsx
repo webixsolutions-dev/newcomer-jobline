@@ -60,7 +60,7 @@ const FinalCTABand = () => {
           {/* ── Right: Buttons ── */}
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto relative z-10 shrink-0">
             <Link
-              to="/browse-jobs"
+              to="/jobs"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-navy-900 font-bold rounded-xl transition-all duration-200 shadow-soft text-sm sm:text-base hover:bg-navy-50"
             >
               <HiOutlineMagnifyingGlass className="text-xl -mt-0.5" />

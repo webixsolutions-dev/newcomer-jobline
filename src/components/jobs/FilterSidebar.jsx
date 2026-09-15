@@ -3,22 +3,12 @@ import { useState, useEffect } from "react";
 import {
   HiOutlineMapPin,
   HiOutlineMagnifyingGlass,
-  HiOutlineBookmark,
   HiChevronUp,
   HiChevronDown,
 } from "react-icons/hi2";
 import { FaLayerGroup } from "react-icons/fa6";
 import { HiOutlineBriefcase, HiOutlineCurrencyDollar, HiOutlineHome } from "react-icons/hi2";
-
-const JOB_CATEGORIES = [
-  "All categories",
-  "Office & Administration",
-  "Customer Service",
-  "Technology & IT",
-  "Skilled Trades",
-  "Healthcare Support",
-  "Hospitality",
-];
+import { usePublicDataset } from "../../hooks/usePublicDataset";
 
 const EMP_TYPES = ["Full-Time", "Part-Time", "Contract", "Temporary", "Internship"];
 const WORK_STYLES = ["Remote", "Hybrid", "On-site"];
@@ -51,6 +41,8 @@ const FilterGroup = ({ title, icon: Icon, children }) => {
  * Left sidebar for refining search results.
  */
 const FilterSidebar = ({ filters, updateFilters, clearFilters }) => {
+  const { dataset } = usePublicDataset();
+  const categories = dataset?.categories || [];
   const [localFilters, setLocalFilters] = useState(filters);
 
   // Keep local state somewhat in sync if hero search updates filters
@@ -71,12 +63,6 @@ const FilterSidebar = ({ filters, updateFilters, clearFilters }) => {
 
   const handleUpdate = () => {
     updateFilters(localFilters);
-  };
-
-  const handleSaveSearch = (e) => {
-    e.preventDefault();
-    console.log("Saving search parameters:", localFilters);
-    alert("Search saved! You will receive notifications for new jobs matching these criteria.");
   };
 
   const isAllTypes =
@@ -122,12 +108,13 @@ const FilterSidebar = ({ filters, updateFilters, clearFilters }) => {
             />
           </div>
           <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" className="w-4 h-4 rounded border-navy-300 text-teal-700 focus:ring-teal-500" />
+            <input
+              type="checkbox"
+              checked={localFilters.workStyles?.includes("Remote") || false}
+              onChange={() => handleCheckboxChange("workStyles", "Remote")}
+              className="w-4 h-4 rounded border-navy-300 text-teal-700 focus:ring-teal-500"
+            />
             <span className="text-sm text-navy-700">Remote (anywhere in Canada)</span>
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" className="w-4 h-4 rounded border-navy-300 text-teal-700 focus:ring-teal-500" />
-            <span className="text-sm text-navy-700">Major cities only</span>
           </label>
         </FilterGroup>
 
@@ -138,11 +125,8 @@ const FilterSidebar = ({ filters, updateFilters, clearFilters }) => {
             onChange={(e) => setLocalFilters({ ...localFilters, category: e.target.value })}
             className="w-full px-4 py-2 rounded-lg border border-navy-200 focus:border-teal-500 outline-none text-sm bg-white"
           >
-            {JOB_CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
+            <option value="All categories">All categories</option>
+            {categories.map((cat) => <option key={cat.id || cat.slug} value={cat.name}>{cat.name}</option>)}
           </select>
         </FilterGroup>
 
@@ -222,14 +206,6 @@ const FilterSidebar = ({ filters, updateFilters, clearFilters }) => {
             <HiOutlineMagnifyingGlass className="text-lg" />
             Update Results
           </button>
-          <a
-            href="#save"
-            onClick={handleSaveSearch}
-            className="w-full flex items-center justify-center gap-2 text-teal-700 font-bold hover:text-teal-800 transition-colors text-sm"
-          >
-            <HiOutlineBookmark className="text-lg" />
-            Save this search
-          </a>
         </div>
       </div>
     </div>

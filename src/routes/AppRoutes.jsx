@@ -5,7 +5,6 @@ import Home from "../pages/Home";
 import ProtectedRoute from "../dashboard/auth/ProtectedRoute";
 import { SeekerDashboardShell } from "../dashboard/routes/DashboardShells";
 import EmployerDashboardShell from "../dashboard/routes/EmployerDashboardShell";
-import { mockSeekerNotifications } from "../dashboard/mock/notifications";
 
 // Lazy load secondary marketing pages
 const BrowseJobsPage = lazy(() => import("../pages/BrowseJobsPage"));
@@ -14,12 +13,11 @@ const PostJob = lazy(() => import("../pages/PostJob"));
 const Employers = lazy(() => import("../pages/Employers"));
 const AboutUs = lazy(() => import("../pages/AboutUs"));
 const ContactUs = lazy(() => import("../pages/ContactUs"));
-const ApplyNow = lazy(() => import("../pages/ApplyNow"));
 const Resources = lazy(() => import("../pages/Resources"));
 
-// Auth Pages
+// Auth Page
 const LoginPage = lazy(() => import("../dashboard/pages/LoginPage"));
-const SignUpPage = lazy(() => import("../dashboard/pages/SignUpPage"));
+const SignupPage = lazy(() => import("../dashboard/pages/SignupPage"));
 
 // Job Seeker Dashboard pages
 const SeekerDashboardHome = lazy(() => import("../dashboard/components/seeker/DashboardHome"));
@@ -38,7 +36,7 @@ const CompanyProfilePage = lazy(() => import("../pages/employerDashboard/Company
 const EmployerSettingsPage = lazy(() => import("../pages/employerDashboard/EmployerSettingsPage"));
 
 function SeekerNotificationsPage() {
-  return <NotificationsList source={mockSeekerNotifications} />;
+  return <NotificationsList source={[]} />;
 }
 
 // Loading Fallback spinner
@@ -61,15 +59,14 @@ const AppRoutes = () => {
           <Route path="employers" element={<Employers />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="contact" element={<ContactUs />} />
-          <Route path="Apply-now" element={<ApplyNow />} />
+          <Route path="Apply-now" element={<Navigate to="/jobs" replace />} />
           <Route path="resources" element={<Resources />} />
         </Route>
 
-        {/* Dashboard auth */}
+        {/* Dashboard sign-in */}
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="/sign-in" element={<Navigate to="/login" replace />} />
-        <Route path="/sign-up" element={<Navigate to="/signup" replace />} />
 
         {/* Job Seeker Dashboard */}
         <Route

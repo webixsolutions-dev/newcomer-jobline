@@ -18,7 +18,7 @@ export default function EmployerOverviewPage() {
     advanceApplicantStage,
     rejectApplicant,
     updateApplicantStage,
-    updateApplicantNotes,
+    viewApplicantResume,
   } = useEmployerData();
 
   const [selectedApplicant, setSelectedApplicant] = useState(null);
@@ -141,7 +141,7 @@ export default function EmployerOverviewPage() {
         open={Boolean(selectedApplicant)}
         onClose={() => setSelectedApplicant(null)}
         onStageChange={updateApplicantStage}
-        onNotesChange={updateApplicantNotes}
+        onViewResume={viewApplicantResume}
       />
     </div>
   );

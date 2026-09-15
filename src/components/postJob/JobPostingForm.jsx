@@ -62,10 +62,15 @@ const JobPostingForm = ({
   onSubmit,
   onSaveDraft,
   hideSuccessState = false,
+  categories = [],
+  allowDraft = false,
 }) => {
   const [form, setForm] = useState(initialValues ?? INITIAL_FORM);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const categoryOptions = categories.length ? categories.map((category) => category.name) : JOB_CATEGORIES;
 
   // Sync when editing an existing posting
   useEffect(() => {
@@ -98,20 +103,26 @@ const JobPostingForm = ({
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    if (dashboardMode && onSubmit) {
-      onSubmit(form, "Active");
+    if (onSubmit) {
+      setSubmitting(true);
+      setSubmitError(null);
+      try {
+        await onSubmit(form, "Active");
+        if (!dashboardMode) setSubmitted(true);
+      } catch (error) {
+        setSubmitError(error.message || "The job could not be saved.");
+      } finally {
+        setSubmitting(false);
+      }
       return;
     }
-    // ── TODO: replace with API call ──
-    console.log("[PostJob] Submit payload:", form);
-    setSubmitted(true);
   };
 
   const handleSaveDraft = () => {
@@ -119,9 +130,6 @@ const JobPostingForm = ({
       onSaveDraft(form);
       return;
     }
-    // ── TODO: replace with localStorage / API integration ──
-    console.log("[PostJob] Draft saved:", form);
-    alert("Draft saved! (stub — will integrate with API or localStorage)");
   };
 
   const handleReset = () => {
@@ -206,6 +214,7 @@ const JobPostingForm = ({
               type="text"
               value={form.companyName}
               onChange={handleChange("companyName")}
+              readOnly={dashboardMode}
               placeholder="e.g., ABC Technologies Inc."
               className={fieldCls(errors.companyName)}
             />
@@ -241,7 +250,7 @@ const JobPostingForm = ({
               className={fieldCls(errors.jobCategory)}
             >
               <option value="">Select a category</option>
-              {JOB_CATEGORIES.map((c) => (
+              {categoryOptions.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
@@ -332,19 +341,24 @@ const JobPostingForm = ({
         <div className="mt-6 flex flex-col sm:flex-row gap-3">
           <button
             type="submit"
+            disabled={submitting}
             className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-teal-700 hover:bg-teal-800 text-white font-bold rounded-full transition-all duration-200 shadow-soft text-sm sm:text-base"
           >
             <HiOutlineDocumentAdd className="text-lg" />
-            {dashboardMode ? "Publish Job" : "Continue to Next Step"}
+            {submitting ? "Saving…" : dashboardMode ? "Publish Job" : "Continue to Employer Sign In"}
           </button>
-          <button
-            type="button"
-            onClick={handleSaveDraft}
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-transparent text-navy-900 border-2 border-navy-200 hover:border-navy-400 font-bold rounded-full transition-all duration-200 text-sm sm:text-base"
-          >
-            Save as Draft
-          </button>
+          {allowDraft && (
+            <button
+              type="button"
+              onClick={handleSaveDraft}
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-transparent text-navy-900 border-2 border-navy-200 hover:border-navy-400 font-bold rounded-full transition-all duration-200 text-sm sm:text-base"
+            >
+              Save as Draft
+            </button>
+          )}
         </div>
+
+        {submitError && <p className="mt-4 rounded-xl border border-red-100 bg-red-50 p-3 text-sm font-semibold text-red-800">{submitError}</p>}
 
         {/* Security note */}
         <p className="flex items-center gap-2 text-xs text-navy-400 mt-4">

@@ -1,31 +1,10 @@
-import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/layout/DashboardLayout";
-import VerificationBanner from "../components/recruiter/VerificationBanner";
-import CompanySetup from "../components/recruiter/CompanySetup";
 import { useAuth } from "../auth/AuthContext";
-import { mockSeekerNotifications, mockRecruiterNotifications } from "../mock/notifications";
 
-const COMPANY_STORAGE_KEY = "newcomer_jobline_mock_company";
-
-function readStoredCompany() {
-  try {
-    const raw = localStorage.getItem(COMPANY_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-/** Job seeker dashboard shell: layout + auth wiring, nested routes render via <Outlet/>. */
 export function SeekerDashboardShell() {
   const { profile, logout } = useAuth();
   const navigate = useNavigate();
-
-  const unreadCount = useMemo(
-    () => mockSeekerNotifications.filter((n) => !n.read_at).length,
-    []
-  );
 
   function handleLogout() {
     logout();

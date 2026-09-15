@@ -1,11 +1,18 @@
 // src/components/about/ImpactStatsBanner.jsx
 import { FaUserGroup } from "react-icons/fa6";
-import { IMPACT_STATS } from "../../data/impactStats";
+import { usePublicDataset } from "../../hooks/usePublicDataset";
 
 /**
  * Full-width tinted impact statistics banner.
  */
 const ImpactStatsBanner = () => {
+  const { dataset, loading } = usePublicDataset();
+  const count = (items) => loading ? "—" : items?.length ?? 0;
+  const stats = [
+    { value: count(dataset?.jobs), label: "Active Jobs", colorClass: "text-teal-700" },
+    { value: count(dataset?.companies), label: "Hiring Companies", colorClass: "text-gold-500" },
+    { value: count(dataset?.categories), label: "Job Categories", colorClass: "text-teal-700" },
+  ];
   return (
     <section className="pb-16 bg-white">
       <div className="container-app">
@@ -18,14 +25,14 @@ const ImpactStatsBanner = () => {
                 <FaUserGroup className="text-xl" />
               </div>
               <p className="text-navy-700 text-sm sm:text-base leading-relaxed">
-                Thousands of newcomers across Canada have found meaningful jobs
-                and built brighter futures with Newcomer Jobline.
+                Explore current opportunities and active employers through the
+                Newcomer Jobline network.
               </p>
             </div>
 
             {/* Right Stat Items */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-gold-200/60">
-              {IMPACT_STATS.map((stat, idx) => (
+              {stats.map((stat, idx) => (
                 <div
                   key={stat.label}
                   className={`flex flex-col items-center text-center ${

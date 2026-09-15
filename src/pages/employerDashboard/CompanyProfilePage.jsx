@@ -3,7 +3,7 @@ import CompanyProfileForm from "../../components/employerDashboard/CompanyProfil
 import { useEmployerData } from "../../context/EmployerDataContext";
 
 export default function CompanyProfilePage() {
-  const { companyProfile, updateCompanyProfile } = useEmployerData();
+  const { companyProfile } = useEmployerData();
 
   return (
     <div className="space-y-6">
@@ -12,7 +12,7 @@ export default function CompanyProfilePage() {
         heading="Company Profile"
         subtitle="How your organization appears to candidates across Newcomer Jobline."
       />
-      <CompanyProfileForm profile={companyProfile} onSave={updateCompanyProfile} />
+      <CompanyProfileForm profile={companyProfile} />
     </div>
   );
 }

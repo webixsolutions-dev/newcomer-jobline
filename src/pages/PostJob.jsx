@@ -1,5 +1,7 @@
 // src/pages/PostJob.jsx
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../dashboard/auth/AuthContext";
 import PostJobHero from "../components/postJob/PostJobHero";
 import PostJobFeatureGrid from "../components/postJob/PostJobFeatureGrid";
 import JobPostingForm from "../components/postJob/JobPostingForm";
@@ -18,6 +20,17 @@ import HireCTABand from "../components/postJob/HireCTABand";
 const PostJob = () => {
   // Ref attached to the form section for smooth-scroll from hero / CTA buttons
   const formRef = useRef(null);
+  const navigate = useNavigate();
+  const { isAuthenticated, role } = useAuth();
+
+  async function continueToDashboard() {
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: "/employer-dashboard/post-a-job" } });
+      return;
+    }
+    if (role !== "recruiter") throw new Error("Sign in with an employer account to post jobs.");
+    navigate("/employer-dashboard/post-a-job");
+  }
 
   return (
     <>
@@ -48,7 +61,7 @@ const PostJob = () => {
 
           {/* Two-column: Form (65%) + Sidebar (35%) */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
-            <JobPostingForm />
+            <JobPostingForm onSubmit={continueToDashboard} />
             <EmployerBenefitsSidebar />
           </div>
         </div>

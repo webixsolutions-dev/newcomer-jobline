@@ -11,7 +11,7 @@ export default function ApplicantListItem({
   showJobTitle = true,
 }) {
   const [confirmReject, setConfirmReject] = useState(false);
-  const isRejected = applicant.stage === "rejected";
+  const isFinal = ["hired", "rejected", "withdrawn"].includes(applicant.stage);
 
   const appliedLabel = new Date(applicant.appliedDate).toLocaleDateString("en-CA", {
     year: "numeric",
@@ -53,7 +53,7 @@ export default function ApplicantListItem({
               {applicant.resumeFilename}
             </button>
             <ApplicationStatusBadge stage={applicant.stage} />
-            {!isRejected && (
+            {!isFinal && (
               <>
                 <Button variant="outline" onClick={() => onAdvance(applicant.id)} className="text-xs">
                   <FiArrowRight size={14} /> Advance

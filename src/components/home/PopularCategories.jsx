@@ -12,47 +12,13 @@ import {
   HiOutlineWrench,
   HiOutlineCake,
 } from "react-icons/hi2";
+import { usePublicDataset } from "../../hooks/usePublicDataset";
 
-const CATEGORIES = [
-  {
-    icon: HiOutlineClipboardList,
-    title: "Administration & Office",
-    desc: "Find roles in admin, office support and coordination.",
-    slug: "administration-office",
-  },
-  {
-    icon: HiOutlinePhoneIncoming,
-    title: "Customer Service",
-    desc: "Help customers and build strong communication skills.",
-    slug: "customer-service",
-  },
-  {
-    icon: HiOutlineDesktopComputer,
-    title: "Technology & IT",
-    desc: "Explore IT jobs for beginners and professionals.",
-    slug: "technology-it",
-  },
-  {
-    icon: HiOutlineWrench,
-    title: "Skilled Trades",
-    desc: "Find opportunities in high-demand skilled trades.",
-    slug: "skilled-trades",
-  },
-  {
-    icon: HiOutlineHeart,
-    title: "Healthcare Support",
-    desc: "Support healthcare teams and make a difference.",
-    slug: "healthcare-support",
-  },
-  {
-    icon: HiOutlineCake,
-    title: "Hospitality",
-    desc: "Discover jobs in hotels, restaurants and event services.",
-    slug: "hospitality",
-  },
-];
+const CATEGORY_ICONS = [HiOutlineClipboardList, HiOutlinePhoneIncoming, HiOutlineDesktopComputer, HiOutlineWrench, HiOutlineHeart, HiOutlineCake];
 
 const PopularCategories = () => {
+  const { dataset, loading } = usePublicDataset();
+  const categories = (dataset?.categories || []).slice(0, 6);
   return (
     <section className="py-16 sm:py-20 bg-white">
       <div className="container-app">
@@ -65,7 +31,7 @@ const PopularCategories = () => {
             <div className="w-10 h-1 bg-gold-500 rounded-full mt-3" />
           </div>
           <Link
-            to="/browse-jobs"
+            to="/jobs"
             className="flex items-center gap-1.5 text-teal-700 font-semibold hover:text-teal-800 transition-colors text-sm shrink-0"
           >
             View all categories <HiArrowRight className="text-base" />
@@ -74,9 +40,14 @@ const PopularCategories = () => {
 
         {/* Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          {CATEGORIES.map((cat, i) => (
+          {loading && Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-48 animate-pulse rounded-2xl border border-navy-100 bg-navy-50" />
+          ))}
+          {!loading && categories.map((cat, i) => {
+            const Icon = CATEGORY_ICONS[i % CATEGORY_ICONS.length];
+            return (
             <motion.div
-              key={cat.slug}
+              key={cat.id || cat.slug}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
@@ -84,24 +55,24 @@ const PopularCategories = () => {
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
             >
               <Link
-                to={`/browse-jobs?category=${cat.slug}`}
+                to={`/jobs?category=${encodeURIComponent(cat.name)}`}
                 className="group flex flex-col items-center text-center gap-4 p-5 rounded-2xl border border-navy-100 bg-white hover:border-teal-200 hover:shadow-card transition-all duration-200 h-full"
               >
                 {/* Icon circle */}
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 group-hover:bg-teal-100 transition-colors">
-                  <cat.icon className="text-2xl text-teal-700" />
+                  <Icon className="text-2xl text-teal-700" />
                 </div>
                 <div>
                   <h3 className="font-bold text-navy-900 text-sm leading-snug">
-                    {cat.title}
+                    {cat.name}
                   </h3>
                   <p className="text-navy-400 text-xs mt-1.5 leading-relaxed">
-                    {cat.desc}
+                    Browse current {cat.name.toLowerCase()} opportunities.
                   </p>
                 </div>
               </Link>
             </motion.div>
-          ))}
+          )})}
         </div>
       </div>
     </section>

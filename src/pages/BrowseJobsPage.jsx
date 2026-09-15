@@ -10,7 +10,6 @@ import JobList from "../components/jobs/JobList";
 import JobsCategoriesGrid from "../components/jobs/JobsCategoriesGrid";
 import JobsHowItWorks from "../components/jobs/JobsHowItWorks";
 import JobsCareerResources from "../components/jobs/JobsCareerResources";
-import SuccessStoriesCarousel from "../components/jobs/SuccessStoriesCarousel";
 import HireTalentMiniCTA from "../components/jobs/HireTalentMiniCTA";
 import JobsFAQSection from "../components/jobs/JobsFAQSection";
 import { useJobFilters } from "../hooks/useJobFilters";
@@ -65,8 +64,8 @@ const BrowseJobsPage = () => {
                 setSortBy={setSortBy}
               />
               {loading ? (
-                <div className="text-center py-12">
-                  <p className="text-navy-500 font-medium">Loading jobs...</p>
+                <div className="flex items-center justify-center py-16" role="status" aria-label="Loading jobs">
+                  <span className="h-10 w-10 animate-spin rounded-full border-4 border-navy-100 border-t-teal-700" />
                 </div>
               ) : error ? (
                 <div className="text-center py-12">
@@ -89,7 +88,6 @@ const BrowseJobsPage = () => {
       <JobsCategoriesGrid />
       <JobsHowItWorks />
       <JobsCareerResources />
-      <SuccessStoriesCarousel />
       <HireTalentMiniCTA />
       <JobsFAQSection />
     </>

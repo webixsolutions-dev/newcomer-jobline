@@ -5,29 +5,15 @@ import {
   HiOutlineBuildingOffice2,
 } from "react-icons/hi2";
 import { HiOutlineGlobeAlt } from "react-icons/hi";
-
-const STATS = [
-  {
-    icon: HiOutlineUserGroup,
-    value: "5K+",
-    label: "Job Seekers",
-    desc: "Finding jobs and building better futures.",
-  },
-  {
-    icon: HiOutlineBuildingOffice2,
-    value: "1K+",
-    label: "Employers",
-    desc: "Partnering with diverse talent across Canada.",
-  },
-  {
-    icon: HiOutlineGlobeAlt,
-    value: null,
-    label: "Canada-Wide Opportunities",
-    desc: "Jobs in cities and communities coast to coast.",
-  },
-];
+import { usePublicDataset } from "../../hooks/usePublicDataset";
 
 const TrustedStatsStrip = () => {
+  const { dataset, loading } = usePublicDataset();
+  const stats = [
+    { icon: HiOutlineUserGroup, value: loading ? "—" : dataset?.jobs?.length ?? 0, label: "Active Jobs", desc: "Live opportunities available on this portal." },
+    { icon: HiOutlineBuildingOffice2, value: loading ? "—" : dataset?.companies?.length ?? 0, label: "Hiring Companies", desc: "Active employers in the shared network." },
+    { icon: HiOutlineGlobeAlt, value: loading ? "—" : dataset?.categories?.length ?? 0, label: "Job Categories", desc: "Career areas available to explore." },
+  ];
   return (
     <section className="py-10 sm:py-12 bg-navy-50/40">
       <div className="container-app">
@@ -61,11 +47,11 @@ const TrustedStatsStrip = () => {
 
           {/* Right: stats */}
           <div className="flex flex-col sm:flex-row gap-0 flex-1 w-full">
-            {STATS.map((stat, i) => (
+            {stats.map((stat, i) => (
               <div
                 key={stat.label}
                 className={`flex-1 flex items-start gap-4 px-6 py-6 ${
-                  i < STATS.length - 1
+                  i < stats.length - 1
                     ? "border-b sm:border-b-0 sm:border-r border-navy-100"
                     : ""
                 }`}

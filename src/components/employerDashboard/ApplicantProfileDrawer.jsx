@@ -1,23 +1,11 @@
-import { useEffect, useState } from "react";
 import { FiX, FiFileText, FiMail, FiPhone } from "react-icons/fi";
 import { Button } from "../../dashboard/components/ui/Primitives";
 import ApplicationStatusBadge from "./ApplicationStatusBadge";
 import { EMPLOYER_PIPELINE_STAGES, EMPLOYER_STAGE_LABELS } from "../../data/pipelineStages";
 
-export default function ApplicantProfileDrawer({ applicant, open, onClose, onStageChange, onNotesChange }) {
-  const [notes, setNotes] = useState("");
-
-  useEffect(() => {
-    if (applicant) setNotes(applicant.notes || "");
-  }, [applicant]);
+export default function ApplicantProfileDrawer({ applicant, open, onClose, onStageChange, onViewResume }) {
 
   if (!open || !applicant) return null;
-
-  function handleNotesBlur() {
-    if (notes !== (applicant.notes || "")) {
-      onNotesChange(applicant.id, notes);
-    }
-  }
 
   return (
     <>
@@ -87,7 +75,7 @@ export default function ApplicantProfileDrawer({ applicant, open, onClose, onSta
             <h3 className="mb-2 text-sm font-bold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
               Resume
             </h3>
-            <Button variant="outline" onClick={() => alert(`Preview: ${applicant.resumeFilename} (mock)`)}>
+            <Button variant="outline" onClick={() => onViewResume(applicant.id)}>
               <FiFileText size={14} /> View Resume — {applicant.resumeFilename}
             </Button>
           </section>
@@ -97,7 +85,7 @@ export default function ApplicantProfileDrawer({ applicant, open, onClose, onSta
               Skills
             </h3>
             <div className="flex flex-wrap gap-2">
-              {applicant.skills.map((skill) => (
+              {(applicant.skills || []).map((skill) => (
                 <span
                   key={skill}
                   className="rounded-full px-2.5 py-1 text-xs font-medium"
@@ -114,7 +102,7 @@ export default function ApplicantProfileDrawer({ applicant, open, onClose, onSta
               Work Experience
             </h3>
             <ul className="space-y-4">
-              {applicant.experience.map((exp, i) => (
+              {(applicant.experience || []).map((exp, i) => (
                 <li key={i} className="text-sm">
                   <p className="font-semibold" style={{ color: "var(--color-primary)" }}>{exp.title}</p>
                   <p style={{ color: "var(--color-text-muted)" }}>{exp.company}</p>
@@ -134,29 +122,15 @@ export default function ApplicantProfileDrawer({ applicant, open, onClose, onSta
               Education
             </h3>
             <ul className="space-y-3">
-              {applicant.education.map((edu, i) => (
+              {(applicant.education || []).map((edu, i) => (
                 <li key={i} className="text-sm">
                   <p className="font-semibold" style={{ color: "var(--color-primary)" }}>{edu.degree}</p>
-                  <p style={{ color: "var(--color-text-muted)" }}>{edu.school} · {edu.year}</p>
+                  <p style={{ color: "var(--color-text-muted)" }}>{edu.institution || edu.school}{edu.field ? ` · ${edu.field}` : ""}</p>
                 </li>
               ))}
             </ul>
           </section>
 
-          <section>
-            <h3 className="mb-2 text-sm font-bold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-              Recruiter Notes
-            </h3>
-            <textarea
-              rows={4}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              onBlur={handleNotesBlur}
-              placeholder="Private notes about this candidate…"
-              className="w-full rounded-[var(--radius-md)] border px-3 py-2 text-sm outline-none resize-none"
-              style={{ borderColor: "var(--color-border)" }}
-            />
-          </section>
         </div>
       </aside>
     </>

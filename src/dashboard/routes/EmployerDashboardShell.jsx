@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import { useAuth } from "../auth/AuthContext";
 import { EmployerDataProvider, useEmployerData } from "../../context/EmployerDataContext";
+import { ErrorState } from "../components/ui/DataStates";
 
 function FlashBanner() {
   const { flashMessage } = useEmployerData();
@@ -22,12 +23,20 @@ function FlashBanner() {
 
 function EmployerDashboardLayout() {
   const { profile, logout } = useAuth();
-  const { companyProfile } = useEmployerData();
+  const { companyProfile, loading, error, reload } = useEmployerData();
   const navigate = useNavigate();
 
   function handleLogout() {
     logout();
     navigate("/login", { replace: true });
+  }
+
+  if (loading) {
+    return <div className="flex min-h-screen items-center justify-center bg-[#eef2f7]"><div className="h-11 w-11 animate-spin rounded-full border-4 border-[#cbd8e7] border-t-[#0f766e]" aria-label="Loading employer dashboard" /></div>;
+  }
+
+  if (error) {
+    return <div className="flex min-h-screen items-center justify-center bg-[#eef2f7]"><ErrorState message={error} onRetry={reload} /></div>;
   }
 
   return (
@@ -37,7 +46,7 @@ function EmployerDashboardLayout() {
         sidebarVariant="employer"
         userName={profile?.full_name || "Recruiter"}
         roleLabel="Employer"
-        companyName={companyProfile.name}
+        companyName={companyProfile.name || "Employer"}
         unreadCount={0}
         onLogout={handleLogout}
         banner={<FlashBanner />}

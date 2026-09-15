@@ -1,14 +1,21 @@
 // src/components/about/OurStorySection.jsx
 import { Link } from "react-router-dom";
-import { HiOutlinePhone } from "react-icons/hi2";
+import { HiOutlinePhone, HiOutlineUsers, HiOutlineBuildingOffice, HiOutlineMap } from "react-icons/hi2";
 import AboutSplitSection from "./AboutSplitSection";
 import { ABOUT_VALUE_CARDS } from "../../data/aboutValueCards";
-import { ABOUT_STATS } from "../../data/aboutStats";
+import { usePublicDataset } from "../../hooks/usePublicDataset";
 
 /**
  * Our Story split section + "What We Stand For" cards + stats strip underneath.
  */
 const OurStorySection = () => {
+  const { dataset, loading } = usePublicDataset();
+  const count = (items) => loading ? "—" : items?.length ?? 0;
+  const stats = [
+    { value: count(dataset?.jobs), label: "Active Jobs", subtext: "available on this portal", icon: HiOutlineUsers },
+    { value: count(dataset?.companies), label: "Hiring Companies", subtext: "active in the shared network", icon: HiOutlineBuildingOffice },
+    { value: "Canada-Wide", label: "Reach", subtext: "coast to coast to coast", icon: HiOutlineMap },
+  ];
   const buttons = (
     <Link
       to="/contact"
@@ -77,7 +84,7 @@ const OurStorySection = () => {
           {/* Stats Strip */}
           <div className="bg-teal-50 border border-teal-100/50 rounded-2xl py-8 px-6 sm:px-12">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 divide-y md:divide-y-0 md:divide-x divide-teal-200/60">
-              {ABOUT_STATS.map((stat, idx) => {
+              {stats.map((stat, idx) => {
                 const Icon = stat.icon;
                 return (
                   <div

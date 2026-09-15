@@ -2,13 +2,16 @@
 import { motion } from "framer-motion";
 import { HiOutlineUserGroup, HiOutlineBriefcase, HiOutlineGlobeAlt } from "react-icons/hi2";
 import { FaCanadianMapleLeaf } from "react-icons/fa6";
-import StatCard from "../common/StatCard";
+import { usePublicDataset } from "../../hooks/usePublicDataset";
 
 /**
  * Trust stats strip on light-teal-tinted background.
  * Layout: Trust statement (left) + 3 stats with vertical dividers.
  */
 const EmployerTrustStatsStrip = () => {
+  const { dataset, loading } = usePublicDataset();
+  const jobsCount = loading ? "—" : dataset?.jobs?.length ?? 0;
+  const companiesCount = loading ? "—" : dataset?.companies?.length ?? 0;
   return (
     <section className="py-8 bg-teal-50/50 border-y border-teal-100">
       <div className="container-app">
@@ -36,10 +39,10 @@ const EmployerTrustStatsStrip = () => {
             </div>
             <div>
               <p className="text-xl sm:text-2xl font-extrabold text-navy-900 font-heading leading-none">
-                5,000+
+                {jobsCount}
               </p>
-              <p className="text-sm font-bold text-navy-900 mt-1">Job Seekers</p>
-              <p className="text-xs text-navy-500 mt-0.5">Skilled newcomers ready to work.</p>
+              <p className="text-sm font-bold text-navy-900 mt-1">Active Jobs</p>
+              <p className="text-xs text-navy-500 mt-0.5">Live openings on this portal.</p>
             </div>
           </div>
 
@@ -50,10 +53,10 @@ const EmployerTrustStatsStrip = () => {
             </div>
             <div>
               <p className="text-xl sm:text-2xl font-extrabold text-navy-900 font-heading leading-none">
-                1,200+
+                {companiesCount}
               </p>
-              <p className="text-sm font-bold text-navy-900 mt-1">Employers</p>
-              <p className="text-xs text-navy-500 mt-0.5">Across industries and all sizes.</p>
+              <p className="text-sm font-bold text-navy-900 mt-1">Hiring Companies</p>
+              <p className="text-xs text-navy-500 mt-0.5">Active companies in the network.</p>
             </div>
           </div>
 

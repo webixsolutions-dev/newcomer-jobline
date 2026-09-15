@@ -15,7 +15,7 @@ export default function AllApplicantsPage() {
     advanceApplicantStage,
     rejectApplicant,
     updateApplicantStage,
-    updateApplicantNotes,
+    viewApplicantResume,
   } = useEmployerData();
 
   const [jobFilter, setJobFilter] = useState("all");
@@ -108,7 +108,7 @@ export default function AllApplicantsPage() {
         open={Boolean(selectedApplicant)}
         onClose={() => setSelectedApplicant(null)}
         onStageChange={updateApplicantStage}
-        onNotesChange={updateApplicantNotes}
+        onViewResume={viewApplicantResume}
       />
     </div>
   );

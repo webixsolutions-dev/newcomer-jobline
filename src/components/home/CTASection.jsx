@@ -37,7 +37,7 @@ const CTASection = () => {
               Join thousands of newcomers who found meaningful work through Newcomer Jobline.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 mt-2">
-              <Button as={Link} to="/browse-jobs" variant="primary" icon={ArrowRight}>
+              <Button as={Link} to="/jobs" variant="primary" icon={ArrowRight}>
                 Browse Jobs
               </Button>
               <Button as={Link} to="/contact" variant="outlineLight">

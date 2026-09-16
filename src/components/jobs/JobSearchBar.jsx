@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { HiOutlineMagnifyingGlass, HiOutlineMapPin, HiOutlineBriefcase } from "react-icons/hi2";
 import { FaLayerGroup } from "react-icons/fa6";
+import { usePublicDataset } from "../../hooks/usePublicDataset";
 import {
   HERO_JOB_SEARCH_BUTTON,
   HERO_JOB_SEARCH_BUTTON_WRAP,
@@ -34,7 +35,9 @@ const EMPLOYMENT_TYPES = [
  */
 const JobSearchBar = ({ updateFilters, listRef }) => {
   const { dataset } = usePublicDataset();
-  const categories = dataset?.categories || [];
+  const categories = dataset?.categories?.length
+    ? dataset.categories
+    : JOB_CATEGORIES.filter((name) => name !== "All categories").map((name) => ({ name }));
   const [localKeyword, setLocalKeyword] = useState("");
   const [localLocation, setLocalLocation] = useState("");
   const [localCategory, setLocalCategory] = useState("All categories");

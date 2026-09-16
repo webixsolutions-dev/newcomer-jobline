@@ -16,7 +16,7 @@ export function SeekerDashboardShell() {
       <DashboardLayout
         role="job_seeker"
         userName={profile?.full_name || "Job Seeker"}
-        unreadCount={unreadCount}
+        unreadCount={0}
         onLogout={handleLogout}
       />
     </div>

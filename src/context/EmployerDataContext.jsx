@@ -226,6 +226,17 @@ export function EmployerDataProvider({ children }) {
     if (applicant && next !== applicant.stage) updateApplicantStage(id, next);
   }
 
+  async function viewApplicantResume(id) {
+    try {
+      const data = await getApplicationResumeUrl(id, token());
+      const url = data?.url || data?.signedUrl || data?.resume_url || data?.signed_url;
+      if (!url) throw new Error("Resume is not available.");
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (requestError) {
+      showFlash(requestError.message || "Resume could not be opened.");
+    }
+  }
+
   function updateCompanyProfile(data) {
     const next = { ...companyProfile, ...data };
     const nextPostings = jobPostings.map((p) => ({

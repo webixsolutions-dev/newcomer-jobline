@@ -20,7 +20,7 @@ const PostJobHero = ({ formRef }) => {
           initial={{ opacity: 0, x: -32 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7 }}
-          className="flex flex-col justify-center gap-6 px-6 sm:px-12 md:px-16 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+6rem))] lg:pr-12 xl:pr-16 py-10 sm:py-14 lg:py-20 max-w-xl w-full"
+          className="hero-copy-padding flex flex-col justify-center gap-6 py-10 sm:py-14 lg:py-20 max-w-xl w-full min-w-0"
         >
           <span className="text-gold-600 font-bold uppercase tracking-widest text-xs sm:text-sm">
             Post a Job

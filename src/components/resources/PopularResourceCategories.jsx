@@ -7,7 +7,7 @@ const PopularResourceCategories = ({ categories }) => {
   return (
     <section
       id="resource-categories"
-      className="py-16 sm:py-20 bg-[#f7f9fb] scroll-mt-24"
+      className="py-16 sm:py-20 bg-white scroll-mt-24"
     >
       <div className="container-app">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">

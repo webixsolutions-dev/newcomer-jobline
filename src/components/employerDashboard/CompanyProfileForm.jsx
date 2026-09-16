@@ -168,6 +168,6 @@ export default function CompanyProfileForm({ profile, onSave }) {
       </div>
       {profile.description && <div><p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--color-text-muted)" }}>Description</p><p className="mt-2 text-sm leading-6" style={{ color: "var(--color-text)" }}>{profile.description}</p></div>}
       <p className="rounded-xl bg-slate-50 p-4 text-sm" style={{ color: "var(--color-text-muted)" }}>These verified company details are securely linked to your recruiter account. Contact support if they need to be updated.</p>
-    </Card>
+    </form>
   );
 }
